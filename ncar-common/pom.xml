@@ -71,10 +71,10 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
         </dependency>
-        <!-- SpringBoot集成mybatis框架 -->
+        <!-- mybatis-plus --><!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <!-- 阿里数据库连接池 -->
         <dependency>

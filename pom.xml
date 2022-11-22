@@ -26,7 +26,6 @@
         <guava-version>31.1-jre</guava-version>
         <apache.common-version>3.12.0</apache.common-version>
         <druid.version>1.2.6</druid.version>
-        <mybatis-spring-boot.version>2.1.4</mybatis-spring-boot.version>
         <lombok.version>1.18.12</lombok.version>
         <springfox-swagger.version>3.0.0</springfox-swagger.version>
         <swagger-models.version>1.6.0</swagger-models.version>
@@ -34,6 +33,7 @@
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
         <hutool.version>5.8.8</hutool.version>
         <pagehelper.boot.version>1.4.5</pagehelper.boot.version>
+        <mybatis.plus-version>3.5.2</mybatis.plus-version>
     </properties>
 
     <parent>
@@ -78,6 +78,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- mybatis-plus --><!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus-version}</version>
+            </dependency>
             <!--        工具包-->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -118,12 +124,6 @@
                 <artifactId>swagger-models</artifactId>
                 <version>${swagger-models.version}</version>
             </dependency>
-            <!-- SpringBoot集成mybatis框架 -->
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot.version}</version>
-            </dependency>
             <!-- 阿里数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -148,7 +148,6 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
-
             <!-- pagehelper 分页插件 -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
@@ -157,7 +156,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-
 </project>
