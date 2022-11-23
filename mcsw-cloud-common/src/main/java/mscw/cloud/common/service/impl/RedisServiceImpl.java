@@ -1,6 +1,6 @@
-package ncar.common.service.impl;
+package mscw.cloud.common.service.impl;
 
-import ncar.common.service.RedisService;
+import mscw.cloud.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 

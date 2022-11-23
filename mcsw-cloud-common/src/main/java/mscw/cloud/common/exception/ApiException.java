@@ -1,7 +1,7 @@
-package ncar.common.exception;
+package mscw.cloud.common.exception;
 
 
-import ncar.common.api.IErrorCode;
+import mscw.cloud.common.api.IErrorCode;
 
 /**
  * 自定义API异常

@@ -1,4 +1,4 @@
-package ncar.common.domain;
+package mscw.cloud.common.domain;
 
 import lombok.Builder;
 import lombok.Data;

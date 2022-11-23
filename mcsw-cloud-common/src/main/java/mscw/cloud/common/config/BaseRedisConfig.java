@@ -1,11 +1,11 @@
-package ncar.common.config;
+package mscw.cloud.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import ncar.common.service.RedisService;
-import ncar.common.service.impl.RedisServiceImpl;
+import mscw.cloud.common.service.RedisService;
+import mscw.cloud.common.service.impl.RedisServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;

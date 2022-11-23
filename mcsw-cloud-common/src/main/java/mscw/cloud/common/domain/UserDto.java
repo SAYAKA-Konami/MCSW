@@ -1,4 +1,4 @@
-package ncar.common.domain;
+package mscw.cloud.common.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

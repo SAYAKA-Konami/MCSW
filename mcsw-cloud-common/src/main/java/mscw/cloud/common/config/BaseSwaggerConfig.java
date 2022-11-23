@@ -1,6 +1,6 @@
-package ncar.common.config;
+package mscw.cloud.common.config;
 
-import ncar.common.domain.SwaggerProperties;
+import mscw.cloud.common.domain.SwaggerProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;

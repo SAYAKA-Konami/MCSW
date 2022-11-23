@@ -1,6 +1,6 @@
-package ncar.common.exception;
+package mscw.cloud.common.exception;
 
-import ncar.common.api.CommonResult;
+import mscw.cloud.common.api.CommonResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

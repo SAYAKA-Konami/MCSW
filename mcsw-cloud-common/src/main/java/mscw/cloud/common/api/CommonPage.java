@@ -1,4 +1,4 @@
-package ncar.common.api;
+package mscw.cloud.common.api;
 
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;

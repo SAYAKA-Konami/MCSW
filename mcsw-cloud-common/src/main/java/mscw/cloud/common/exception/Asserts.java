@@ -1,7 +1,7 @@
-package ncar.common.exception;
+package mscw.cloud.common.exception;
 
 
-import ncar.common.api.IErrorCode;
+import mscw.cloud.common.api.IErrorCode;
 
 /**
  * 断言处理类，用于抛出各种API异常

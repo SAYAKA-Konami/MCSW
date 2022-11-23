@@ -1,4 +1,4 @@
-package ncar.common.api;
+package mscw.cloud.common.api;
 
 /**
  * 封装API的错误码
