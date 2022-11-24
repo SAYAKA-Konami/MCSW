@@ -9,10 +9,12 @@ spring:
       config:
         server-addr: 43.139.88.73:8848
         file-extension: yml
+        # 默认会加载配置中心的 mcsw-cloud-account-dev.yml
         namespace: mcsw-dev
         username: nacos
         password: fivecent
         extension-configs[0]:
+          # 扩展配置文件
           data-id: datasource.yml
           refresh: true
 
