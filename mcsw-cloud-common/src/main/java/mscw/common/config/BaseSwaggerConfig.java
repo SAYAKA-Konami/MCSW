@@ -1,6 +1,6 @@
-package mscw.cloud.common.config;
+package mscw.common.config;
 
-import mscw.cloud.common.domain.SwaggerProperties;
+import mscw.common.domain.SwaggerProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
-package mscw.cloud.common.exception;
+package mscw.common.exception;
 
-import mscw.cloud.common.api.CommonResult;
+import mscw.common.api.CommonResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

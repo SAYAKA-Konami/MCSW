@@ -1,4 +1,4 @@
-package mscw.cloud.common.api;
+package mscw.common.api;
 
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;

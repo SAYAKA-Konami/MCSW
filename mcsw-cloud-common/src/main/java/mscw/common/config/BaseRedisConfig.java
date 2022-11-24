@@ -1,11 +1,11 @@
-package mscw.cloud.common.config;
+package mscw.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import mscw.cloud.common.service.RedisService;
-import mscw.cloud.common.service.impl.RedisServiceImpl;
+import mscw.common.service.RedisService;
+import mscw.common.service.impl.RedisServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;

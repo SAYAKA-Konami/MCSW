@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>mcsw-cloud-common</module>
+        <module>mcsw-cloud-account</module>
     </modules>
 
     <properties>
@@ -19,6 +20,7 @@
         <java.version>1.8</java.version>
         <!-- Spring Cloud Alibaba 版本 -->
         <spring.cloud.alibaba>2021.0.4.0</spring.cloud.alibaba>
+        <nacos.version>2021.0.4.0</nacos.version>
         <!-- Spring Cloud 版本 -->
         <spring.cloud>2021.0.4</spring.cloud>
         <spring-data-commons.version>2.6.1</spring-data-commons.version>
@@ -77,6 +79,17 @@
                 <version>${spring.cloud.alibaba}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${nacos.version}</version>
             </dependency>
             <!-- mybatis-plus --><!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
             <dependency>

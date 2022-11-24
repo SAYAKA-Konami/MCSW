@@ -1,7 +1,7 @@
-package mscw.cloud.common.exception;
+package mscw.common.exception;
 
 
-import mscw.cloud.common.api.IErrorCode;
+import mscw.common.api.IErrorCode;
 
 /**
  * 自定义API异常

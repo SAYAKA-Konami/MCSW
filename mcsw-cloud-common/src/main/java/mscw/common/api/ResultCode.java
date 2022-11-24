@@ -1,4 +1,4 @@
-package mscw.cloud.common.api;
+package mscw.common.api;
 
 /**
  * 枚举了一些常用API操作码

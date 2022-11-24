@@ -1,6 +1,6 @@
-package mscw.cloud.common.service.impl;
+package mscw.common.service.impl;
 
-import mscw.cloud.common.service.RedisService;
+import mscw.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 

@@ -1,4 +1,4 @@
-package mscw.cloud.common.api;
+package mscw.common.api;
 
 /**
  * 通用返回对象

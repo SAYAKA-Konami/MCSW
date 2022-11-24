@@ -1,4 +1,4 @@
-package mscw.cloud.common.domain;
+package mscw.common.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

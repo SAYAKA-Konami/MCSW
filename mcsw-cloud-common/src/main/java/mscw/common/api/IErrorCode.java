@@ -1,4 +1,4 @@
-package mscw.cloud.common.api;
+package mscw.common.api;
 
 /**
  * 封装API的错误码

@@ -1,4 +1,4 @@
-package mscw.cloud.common.domain;
+package mscw.common.domain;
 
 import lombok.Builder;
 import lombok.Data;
