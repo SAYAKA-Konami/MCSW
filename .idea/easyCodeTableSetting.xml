@@ -53,6 +53,20 @@
                     <option name="name" value="college" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="专业" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="major" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="0-本科 1-研究生 2-博士生 3-教职工" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="degree" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
                 </list>
               </option>
               <option name="name" value="User" />

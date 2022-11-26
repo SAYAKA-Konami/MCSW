@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
 @ApiModel("用户注册信息")
 @Data
 public class UserDto {
@@ -13,28 +16,43 @@ public class UserDto {
     @ApiModelProperty("昵称")
     private String name;
 
-    @ApiModelProperty("性别。0-女/ 1-男")
+    @ApiModelProperty("性别。0-女/ 1-男/-1-未定义")
     private Integer gender;
 
     /**
      *  学号
      */
     @ApiModelProperty("学号")
+    @NotNull
     private String id;
 
     /**
      *  登录学校信息门户的密码
      */
     @ApiModelProperty("学校信息门户的登录密码")
+    @NotNull
     private String passwd;
 
-    @ApiModelProperty("学院")
-    private Integer college;
-
     @ApiModelProperty("邮箱")
+    @Email(message = "邮箱格式错误")
     private String email;
 
+    /**
+     *  转换由后端处理
+     */
+    @ApiModelProperty(value = "学院")
+    @NotNull
+    private Integer college;
 
 
+    @ApiModelProperty("专业")
+    private String major;
+
+    @ApiModelProperty("本科/研究生/博士/教职工")
+    private String degreeVar;
+
+
+    @ApiModelProperty(hidden = true)
+    private Integer degree;
 
 }

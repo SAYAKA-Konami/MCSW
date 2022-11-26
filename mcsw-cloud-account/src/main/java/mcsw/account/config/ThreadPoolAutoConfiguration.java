@@ -26,7 +26,7 @@ public class ThreadPoolAutoConfiguration {
     @Resource
     ValueFromNacos value;
 
-    @Bean(name = "crawlerTaskExecutor")
+    @Bean(name = "accountTaskExecutor")
     public ThreadPoolTaskExecutor getMetricTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(value.getCrawlerCoreActive());
@@ -38,7 +38,7 @@ public class ThreadPoolAutoConfiguration {
 
             @Override
             public Thread newThread(Runnable runnable) {
-                return new Thread(runnable, "crawler-worker-" + nextThreadId.incrementAndGet());
+                return new Thread(runnable, "account-worker-" + nextThreadId.incrementAndGet());
             }
         });
         return executor;

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import mcsw.account.entity.User;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * (User)表数据库访问层
@@ -15,6 +16,11 @@ import mcsw.account.entity.User;
  */
 @Mapper
 public interface UserDao extends BaseMapper<User> {
+
+    int countByName(String name);
+
+    @Select("select count(*) from user where account = #{account}")
+    int countByAccount(@Param("account") String account);
 
 /**
 * 批量新增数据（MyBatis原生foreach方法）

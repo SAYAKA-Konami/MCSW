@@ -1,7 +1,6 @@
 package mcsw.account.service.impl;
 
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import mcsw.account.config.Constant;
@@ -12,6 +11,7 @@ import mcsw.account.model.dto.UserDto;
 import mcsw.account.service.UserService;
 import mcsw.account.util.CrawlerUtil;
 import mcsw.account.util.GetRSAPasswdUtil;
+import mcsw.account.util.filter.HandleRegister;
 import mscw.common.api.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -34,44 +34,29 @@ import static mcsw.account.config.Constant.URL_LOGIN;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
     @Resource
-    CrawlerUtil crawlerUtil;
+    private CrawlerUtil crawlerUtil;
 
     @Resource
-    GetRSAPasswdUtil rsaPasswdUtil;
-
-    @Resource
-    ThreadPoolTaskExecutor crawlerTaskExecutor;
+    private GetRSAPasswdUtil rsaPasswdUtil;
 
     @Autowired
-    ValueFromNacos value;
+    private ValueFromNacos value;
+
+    @Resource(name = "registerChain")
+    private HandleRegister handleRegister;
 
 
     public CommonResult<String> register(UserDto userDto){
-        CompletableFuture<Map<String, Object>> getParams = CompletableFuture.supplyAsync(() -> crawlerUtil.getHtml(), crawlerTaskExecutor);
-        CompletableFuture<Boolean> login = new CompletableFuture<>();
-        CompletableFuture.supplyAsync(() -> {
-                    String rsaPasswd = rsaPasswdUtil.RSAPasswd(userDto.getPasswd());
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("username", userDto.getId());
-                    map.put("password", rsaPasswd);
-                    return map;
-                }, crawlerTaskExecutor)
-                // 第一个参数是当前执行获得的结果。第二个是被合并的CF执行完成的结果
-                .thenCombineAsync(getParams, (userNameAndPasswd, paramsFromHtml) -> {
-                    paramsFromHtml.putAll(userNameAndPasswd);
-                    return paramsFromHtml;
-                    // 发送请求。
-                }).whenComplete((body, r) -> {
-                    if (r != null) {
-                        login.completeExceptionally(r);
-                    } else {
-                        boolean result = login(body);
-                        login.complete(result);
-                    }
-                });
-        // 等待登录执行结果
-        Boolean isLogin = login.join();
-        if (!isLogin) {
+        CommonResult<String> handle = handleRegister.handle(userDto);
+        if (handle != null) return handle;
+        String rsaPasswd = rsaPasswdUtil.RSAPasswd(userDto.getPasswd());
+        Map<String, Object> body = new HashMap<>();
+        body.put("username", userDto.getId());
+        body.put("password", rsaPasswd);
+        Map<String, Object> html = crawlerUtil.getHtml();
+        body.putAll(html);
+        boolean login = login(body);
+        if (!login){
             return CommonResult.failed(Constant.LOGIN_FAIL);
         }else{
             registerIntoDatabase(userDto);
@@ -98,7 +83,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
                 .setName(userDto.getName())
                 .setEmail(userDto.getEmail())
                 .setCollege(userDto.getCollege())
-                .setPasswd(userDto.getPasswd());
+                .setPasswd(userDto.getPasswd())
+                .setDegree(userDto.getDegree())
+                .setMajor(userDto.getMajor());
         return this.save(user);
     }
 

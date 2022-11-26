@@ -10,25 +10,31 @@
         <result property="gender" column="gender" jdbcType="INTEGER"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="college" column="college" jdbcType="INTEGER"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="degree" column="degree" jdbcType="INTEGER"/>
     </resultMap>
+
+    <select id="countByName" resultType="int">
+        select count(*) from user where name = #{name}
+    </select>
 
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.user(name, account, passwd, gender, emali, college)
+        insert into mcsw.user(name, account, passwd, gender, email, college, major, degree)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.emali}, #{entity.college})
+        (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree})
         </foreach>
     </insert>
     <!-- 批量插入或按主键更新 -->
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.user(name, account, passwd, gender, emali, college)
+        insert into mcsw.user(name, account, passwd, gender, email, college, major, degree)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.emali}, #{entity.college})
+            (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree})
         </foreach>
         on duplicate key update
-         name = values(name) , account = values(account) , passwd = values(passwd) , gender = values(gender) , emali = values(emali) , college = values(college)     </insert>
+         name = values(name) , account = values(account) , passwd = values(passwd) , gender = values(gender) , email = values(email) , college = values(college) , major = values(major) , degree = values(degree)     </insert>
 
 </mapper>
 

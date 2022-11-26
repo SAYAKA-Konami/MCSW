@@ -1,5 +1,6 @@
 package mcsw.account.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -8,7 +9,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class User {
 
-    @TableId
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private String account;
@@ -28,5 +29,18 @@ public class User {
      * 其他待定
      */
     private Integer college;
+
+    /**
+     *  0- 本科
+     *  1-研究生
+     *  2-博士生
+     *  3-教职工
+     */
+    private Integer degree;
+
+    /**
+     *  专业名称
+     */
+    private String major;
 
 }
