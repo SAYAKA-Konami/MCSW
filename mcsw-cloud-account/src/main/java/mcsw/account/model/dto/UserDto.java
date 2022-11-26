@@ -1,4 +1,4 @@
-package mcsw.account.dto;
+package mcsw.account.model.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +13,9 @@ public class UserDto {
     @ApiModelProperty("昵称")
     private String name;
 
+    @ApiModelProperty("性别。0-女/ 1-男")
+    private Integer gender;
+
     /**
      *  学号
      */
@@ -24,4 +27,14 @@ public class UserDto {
      */
     @ApiModelProperty("学校信息门户的登录密码")
     private String passwd;
+
+    @ApiModelProperty("学院")
+    private Integer college;
+
+    @ApiModelProperty("邮箱")
+    private String email;
+
+
+
+
 }
