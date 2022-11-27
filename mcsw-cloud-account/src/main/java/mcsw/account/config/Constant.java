@@ -12,5 +12,15 @@ public interface Constant {
 
     String REPEAT_REGISTER = "该学号已经注册了呀";
 
+    /**
+     *  Token过期时间
+     */
+    Integer EXPIRE_DAY = 7;
+
+    /**
+     *  JWT密钥
+     */
+    String SECRET_KEY = "SAYAKA";
+
 
 }

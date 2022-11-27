@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import mcsw.account.entity.User;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * (User)表数据库访问层
@@ -21,6 +23,13 @@ public interface UserDao extends BaseMapper<User> {
 
     @Select("select count(*) from user where account = #{account}")
     int countByAccount(@Param("account") String account);
+
+    @Select("select * from user where account = #{account}")
+    User selectByAccountUser(@Param("account") String account);
+
+    @Transactional
+    @Update("update user set password = #{passwd} where account = ${account}")
+    void updatePasswd(@Param("account")String account, @Param("passwd") String passwd);
 
 /**
 * 批量新增数据（MyBatis原生foreach方法）
