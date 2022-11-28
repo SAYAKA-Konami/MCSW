@@ -1,5 +1,6 @@
 package mcsw.account.config;
 
+import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,11 @@ import java.time.LocalDateTime;
 public class EntityDateHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        setFieldValByName("createTime", DateTime.now().toJdkDate(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        setFieldValByName("updateTime", DateTime.now().toJdkDate(), metaObject);
     }
 }

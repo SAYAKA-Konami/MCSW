@@ -5,7 +5,7 @@ import mcsw.account.util.filter.HandleRegister;
 import mscw.common.api.CommonResult;
 import org.springframework.stereotype.Component;
 
-@Component("FillGender")
+@Component
 public class FillGender extends HandleRegister {
 
 

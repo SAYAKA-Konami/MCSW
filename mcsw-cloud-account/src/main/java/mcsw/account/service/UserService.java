@@ -1,6 +1,5 @@
 package mcsw.account.service;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.http.HttpRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +13,13 @@ import mcsw.account.model.vo.UserVO;
 import mcsw.account.util.CrawlerUtil;
 import mcsw.account.util.GetRSAPasswdUtil;
 import mcsw.account.util.JWTUtil;
-import mcsw.account.util.UserUtil;
 import mcsw.account.util.filter.HandleRegister;
 import mscw.common.api.CommonResult;
-import mscw.common.service.RedisService;
+import mscw.common.domain.DictionaryOfCollegeAndDegree;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -99,6 +94,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
             AuthVO vo = new AuthVO();
             UserVO userVo = new UserVO();
             BeanUtils.copyProperties(user, userVo);
+            buildCompleteUserVo(user, userVo);
             vo.setToken(JWTUtil.buildJwt(this.getLoginExpre(), userVo));
             vo.setUser(userVo);
             return CommonResult.success(vo);
@@ -106,6 +102,20 @@ public class UserService extends ServiceImpl<UserDao, User>{
             log.error("登录失败了！{}; account:{}", ex, account);
             return CommonResult.failed(BAD_THING_HAPPENED);
         }
+    }
+
+    /**
+     * 补充反射中设置不了指
+     */
+    private void buildCompleteUserVo(User user, UserVO userVo) {
+        // User实体类种ID作为数据库主键被占用。所以这里得手动设置
+        userVo.setId(user.getAccount());
+        Map<Integer, String> code2collegeName = DictionaryOfCollegeAndDegree.getCode2collegeName();
+        // 手动设置学院名称
+        userVo.setCollegeCz(code2collegeName.get(user.getCollege()));
+        Map<Integer, String> code_degreecz = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ();
+        userVo.setDegreeCz(code_degreecz.get(user.getDegree()));
+        userVo.setGenderCz(user.getGender()  == 0 ? "woman" : user.getGender() == 1 ? "man" : "unknown");
     }
 
     public CommonResult<String> update(UserDto userDto){

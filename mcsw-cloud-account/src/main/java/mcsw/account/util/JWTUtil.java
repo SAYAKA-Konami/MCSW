@@ -2,11 +2,10 @@ package mcsw.account.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import mcsw.account.entity.User;
 import mcsw.account.model.vo.UserVO;
-
 import java.util.Date;
-
-import static mcsw.account.config.Constant.SECRET_KEY;
+import static mscw.common.config.Constants.SECRET_KEY;
 
 public class JWTUtil {
     public static String buildJwt(Date expire, UserVO user) {
@@ -16,11 +15,13 @@ public class JWTUtil {
                 // 过期时间
                 .setExpiration(expire)
                 // 密码不参与Token的生成
-                .claim("uuid",user.getUuid())
                 .claim("id",user.getId())
-                .claim("major", user.getMajor())
                 .claim("name", user.getName())
-                .claim("college", user.getCollege())
+                .claim("gender", user.getGenderCz())
+                .claim("degree", user.getDegreeCz())
+                .claim("college", user.getCollegeCz())
+                .claim("major", user.getMajor())
+                .claim("email", user.getEmail())
                 .compact();
         return jwt;
     }

@@ -15,6 +15,7 @@
     </modules>
 
     <properties>
+        <spring.version>2.6.11</spring.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +26,7 @@
         <!-- Spring Cloud 版本 -->
         <spring.cloud>2021.0.4</spring.cloud>
         <spring-data-commons.version>2.6.1</spring-data-commons.version>
+        <aspectj.version>1.9.7</aspectj.version>
         <commons.io.version>2.11.0</commons.io.version>
         <guava-version>31.1-jre</guava-version>
         <apache.common-version>3.12.0</apache.common-version>
@@ -51,20 +53,26 @@
         <dependencies>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

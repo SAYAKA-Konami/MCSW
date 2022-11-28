@@ -40,16 +40,18 @@ public class UserDto {
     /**
      *  转换由后端处理
      */
-    @ApiModelProperty(value = "学院")
-    @NotNull
+    @ApiModelProperty(value = "学院", hidden = true)
     private Integer college;
+
+    @ApiModelProperty(value = "学院中文")
+    private String collegeCz;
 
 
     @ApiModelProperty("专业")
     private String major;
 
     @ApiModelProperty("本科/研究生/博士/教职工")
-    private String degreeVar;
+    private String degreeCz;
 
 
     @ApiModelProperty(hidden = true)

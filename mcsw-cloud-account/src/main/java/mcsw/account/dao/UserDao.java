@@ -3,11 +3,8 @@ package mcsw.account.dao;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import mcsw.account.entity.User;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -19,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Mapper
 public interface UserDao extends BaseMapper<User> {
 
+    @ResultType(Integer.class)
     @Select("select count(*) from user where name = #{name}")
     int countByName(String name);
-
+    @ResultType(Integer.class)
     @Select("select count(*) from user where account = #{account}")
     int countByAccount(@Param("account") String account);
 
+    @ResultMap("UserMap")
     @Select("select * from user where account = #{account}")
     User selectByAccountUser(@Param("account") String account);
     @Transactional
