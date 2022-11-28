@@ -15,6 +15,7 @@ public class JWTUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 // 过期时间
                 .setExpiration(expire)
+                // 密码不参与Token的生成
                 .claim("uuid",user.getUuid())
                 .claim("id",user.getId())
                 .claim("major", user.getMajor())

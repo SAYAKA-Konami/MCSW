@@ -27,6 +27,13 @@ public class AccountController {
     public CommonResult<String> register(UserDto userDto){
         return userService.register(userDto);
     }
+
+    @ApiOperation(value = "修改", httpMethod = "POST")
+    @PostMapping("/update")
+    public CommonResult<String> update(UserDto userDto){
+        return userService.update(userDto);
+    }
+
     @GetMapping("/test")
     public CommonResult<String> test(){
       log.info("接受到请求");

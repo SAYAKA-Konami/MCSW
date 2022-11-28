@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Mapper
 public interface UserDao extends BaseMapper<User> {
 
+    @Select("select count(*) from user where name = #{name}")
     int countByName(String name);
 
     @Select("select count(*) from user where account = #{account}")
@@ -26,10 +27,13 @@ public interface UserDao extends BaseMapper<User> {
 
     @Select("select * from user where account = #{account}")
     User selectByAccountUser(@Param("account") String account);
+    @Transactional
+    void updateOne(User user);
 
     @Transactional
     @Update("update user set password = #{passwd} where account = ${account}")
     void updatePasswd(@Param("account")String account, @Param("passwd") String passwd);
+
 
 /**
 * 批量新增数据（MyBatis原生foreach方法）

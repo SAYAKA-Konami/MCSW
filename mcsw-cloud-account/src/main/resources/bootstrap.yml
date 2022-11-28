@@ -26,4 +26,5 @@ spring:
         password: fivecent
         namespace: mcsw-dev
 
-
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml

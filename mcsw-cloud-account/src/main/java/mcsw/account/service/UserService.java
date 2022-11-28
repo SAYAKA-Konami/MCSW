@@ -1,5 +1,6 @@
 package mcsw.account.service;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.http.HttpRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static mcsw.account.config.Constant.EXPIRE_DAY;
-import static mcsw.account.config.Constant.URL_LOGIN;
+import static mcsw.account.config.Constant.*;
 
 /**
  * (User)表服务实现类
@@ -49,14 +49,10 @@ public class UserService extends ServiceImpl<UserDao, User>{
     private GetRSAPasswdUtil rsaPasswdUtil;
     @Resource(name = "registerChain")
     private HandleRegister handleRegister;
-    @Resource
-    private ThreadPoolTaskExecutor accountTaskExecutor;
     @Autowired
     private ValueFromNacos value;
     @Autowired
     private UserDao userDao;
-    @Resource
-    private RedisService redisServiceImpl;
 
 
     /**
@@ -88,7 +84,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
         try{
             User user = userDao.selectByAccountUser(account);
             if (null == user) {
-                return CommonResult.failed("登录失败，用户不存在！");
+                return CommonResult.failed(USER_NOT_FOUND);
             }
 
             // 校验用户密码，这里暂不考虑对密码做加密处理
@@ -97,7 +93,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
                 return ResultUtil.verificationFailed().buildMessage("登录失败，密码输入错误！");
             }*/
             if (!StringUtils.equals(password, user.getPasswd())){
-                return CommonResult.failed("登录失败，用户名或密码错误!");
+                return CommonResult.failed(WRONG_ACCOUNT_OR_PASSWD);
             }
             // 登录成功，返回用户信息
             AuthVO vo = new AuthVO();
@@ -108,14 +104,19 @@ public class UserService extends ServiceImpl<UserDao, User>{
             return CommonResult.success(vo);
         } catch (Exception ex) {
             log.error("登录失败了！{}; account:{}", ex, account);
-            return CommonResult.failed("登录失败，服务器被吃了＝(#>д<)ﾉ ！请重试。 ");
+            return CommonResult.failed(BAD_THING_HAPPENED);
         }
     }
 
-    public CommonResult<String> updatePasswd(String account, String newPassword){
-        userDao.updatePasswd(account, newPassword);
-        return CommonResult.success("修改成功");
+    public CommonResult<String> update(UserDto userDto){
+        String account = userDto.getId();
+        User user = new User();
+        BeanUtils.copyProperties(userDto, user);
+        user.setAccount(account);
+        userDao.updateOne(user);
+        return CommonResult.success(UPDATE_SUCCESS);
     }
+
 
     /**
      *  模拟登录信息门户

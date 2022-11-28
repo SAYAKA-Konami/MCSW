@@ -67,6 +67,18 @@
                     <option name="name" value="degree" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="createTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="updateTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
                 </list>
               </option>
               <option name="name" value="User" />
@@ -74,7 +86,7 @@
               <option name="saveModelName" value="mcsw-cloud-account" />
               <option name="savePackageName" value="mcsw.account" />
               <option name="savePath" value="./mcsw-cloud-account/src/main/java/mcsw/account" />
-              <option name="templateGroupName" value="MybatisPlus-Mixed" />
+              <option name="templateGroupName" value="Default" />
             </TableInfoDTO>
           </value>
         </entry>

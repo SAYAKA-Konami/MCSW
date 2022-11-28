@@ -12,29 +12,177 @@
         <result property="college" column="college" jdbcType="INTEGER"/>
         <result property="major" column="major" jdbcType="VARCHAR"/>
         <result property="degree" column="degree" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <select id="countByName" resultType="int">
-        select count(*) from user where name = #{name}
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select
+          id, name, account, passwd, gender, email, college, major, degree, create_time, update_time
+        from user
+        where id = #{id}
     </select>
 
-    <!-- 批量插入 -->
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+          id, name, account, passwd, gender, email, college, major, degree, create_time, update_time
+        from user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="account != null and account != ''">
+                and account = #{account}
+            </if>
+            <if test="passwd != null and passwd != ''">
+                and passwd = #{passwd}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="college != null">
+                and college = #{college}
+            </if>
+            <if test="major != null and major != ''">
+                and major = #{major}
+            </if>
+            <if test="degree != null">
+                and degree = #{degree}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="account != null and account != ''">
+                and account = #{account}
+            </if>
+            <if test="passwd != null and passwd != ''">
+                and passwd = #{passwd}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="college != null">
+                and college = #{college}
+            </if>
+            <if test="major != null and major != ''">
+                and major = #{major}
+            </if>
+            <if test="degree != null">
+                and degree = #{degree}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into user(name, account, passwd, gender, email, college, major, degree, create_time, update_time)
+        values (#{name}, #{account}, #{passwd}, #{gender}, #{email}, #{college}, #{major}, #{degree}, #{createTime}, #{updateTime})
+    </insert>
+
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.user(name, account, passwd, gender, email, college, major, degree)
+        insert into user(name, account, passwd, gender, email, college, major, degree, create_time, update_time)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree})
+        (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree}, #{entity.createTime}, #{entity.updateTime})
         </foreach>
     </insert>
-    <!-- 批量插入或按主键更新 -->
+
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.user(name, account, passwd, gender, email, college, major, degree)
+        insert into user(name, account, passwd, gender, email, college, major, degree, create_time, update_time)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree})
+            (#{entity.name}, #{entity.account}, #{entity.passwd}, #{entity.gender}, #{entity.email}, #{entity.college}, #{entity.major}, #{entity.degree}, #{entity.createTime}, #{entity.updateTime})
         </foreach>
         on duplicate key update
-         name = values(name) , account = values(account) , passwd = values(passwd) , gender = values(gender) , email = values(email) , college = values(college) , major = values(major) , degree = values(degree)     </insert>
+        name = values(name),
+        account = values(account),
+        passwd = values(passwd),
+        gender = values(gender),
+        email = values(email),
+        college = values(college),
+        major = values(major),
+        degree = values(degree),
+        create_time = values(create_time),
+        update_time = values(update_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateOne">
+        update user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="account != null and account != ''">
+                account = #{account},
+            </if>
+            <if test="passwd != null and passwd != ''">
+                passwd = #{passwd},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="college != null">
+                college = #{college},
+            </if>
+            <if test="major != null and major != ''">
+                major = #{major},
+            </if>
+            <if test="degree != null">
+                degree = #{degree},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from user where id = #{id}
+    </delete>
 
 </mapper>
 
