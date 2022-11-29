@@ -2,8 +2,7 @@ package mcsw.account.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import mcsw.account.entity.User;
-import mcsw.account.model.vo.UserVO;
+import mscw.common.domain.vo.UserVO;
 import java.util.Date;
 import static mscw.common.config.Constants.SECRET_KEY;
 

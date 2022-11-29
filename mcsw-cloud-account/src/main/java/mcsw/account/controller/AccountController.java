@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import mcsw.account.model.dto.UserDto;
 import mcsw.account.model.dto.UserLoginDto;
-import mcsw.account.model.vo.AuthVO;
+import mscw.common.domain.vo.AuthVO;
 import mcsw.account.service.UserService;
 import mscw.common.api.CommonResult;
 import org.springframework.web.bind.annotation.PostMapping;

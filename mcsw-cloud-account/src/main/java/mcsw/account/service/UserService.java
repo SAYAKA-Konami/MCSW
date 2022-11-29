@@ -1,5 +1,7 @@
 package mcsw.account.service;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.http.HttpRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -9,14 +11,16 @@ import mcsw.account.config.ValueFromNacos;
 import mcsw.account.dao.UserDao;
 import mcsw.account.entity.User;
 import mcsw.account.model.dto.UserDto;
-import mcsw.account.model.vo.AuthVO;
-import mcsw.account.model.vo.UserVO;
+import mscw.common.domain.vo.AuthVO;
+import mscw.common.domain.vo.UserVO;
 import mcsw.account.util.CrawlerUtil;
 import mcsw.account.util.GetRSAPasswdUtil;
 import mcsw.account.util.JWTUtil;
 import mcsw.account.util.filter.HandleRegister;
 import mscw.common.api.CommonResult;
 import mscw.common.domain.DictionaryOfCollegeAndDegree;
+import mscw.common.service.RedisService;
+import mscw.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +53,8 @@ public class UserService extends ServiceImpl<UserDao, User>{
     private ValueFromNacos value;
     @Autowired
     private UserDao userDao;
-
+    @Autowired
+    private RedisService redisService;
 
     /**
      *  注册
@@ -98,6 +103,9 @@ public class UserService extends ServiceImpl<UserDao, User>{
             buildCompleteUserVo(user, userVo);
             vo.setToken(JWTUtil.buildJwt(this.getLoginExpre(), userVo));
             vo.setUser(userVo);
+            String jsonOfAuth = JsonUtil.toJson(vo);
+            // 将信息存储到Redis中
+            redisService.set(vo.getUser().getId(), jsonOfAuth, getLongVarToToday(7));
             return CommonResult.success(vo);
         } catch (Exception ex) {
             log.error("登录失败了！{}; account:{}", ex, account);
@@ -151,6 +159,18 @@ public class UserService extends ServiceImpl<UserDao, User>{
     }
 
     /**
+     *  天至毫秒的转换器。
+     */
+    public long getLongVarToToday(int n){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, n);
+        DateTime future = DateTime.of(cal);
+        DateTime now = DateTime.now();
+        return now.between(future, DateUnit.MS);
+    }
+
+    /**
      * 获取登陆过期时间。 默认设置为7天
      */
     private Date getLoginExpre(){
@@ -170,6 +190,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
                 .setMajor(userDto.getMajor());
         return this.save(user);
     }
+
 
 }
 

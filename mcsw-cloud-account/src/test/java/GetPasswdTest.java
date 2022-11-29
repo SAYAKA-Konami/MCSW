@@ -1,3 +1,5 @@
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import mcsw.account.util.CrawlerUtil;
@@ -7,6 +9,8 @@ import org.springframework.core.io.ClassPathResource;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.InputStreamReader;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class GetPasswdTest {
@@ -50,6 +54,16 @@ public class GetPasswdTest {
         System.out.println(status);
         String body = execute.body();
         System.out.println(body);
+    }
+
+    @Test
+    public void testDateTime(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 7);
+        DateTime future = DateTime.of(cal);
+        DateTime now = DateTime.now();
+        System.out.println(now.between(future, DateUnit.MS));
     }
 
 

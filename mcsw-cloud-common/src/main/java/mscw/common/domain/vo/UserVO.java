@@ -1,4 +1,4 @@
-package mcsw.account.model.vo;
+package mscw.common.domain.vo;
 
 import lombok.Data;
 
