@@ -3,6 +3,7 @@ package mcsw.account.service;
 import cn.hutool.http.HttpRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import mscw.common.aop.EnableRequestHeader;
 import mcsw.account.config.Constant;
 import mcsw.account.config.ValueFromNacos;
 import mcsw.account.dao.UserDao;
@@ -127,6 +128,10 @@ public class UserService extends ServiceImpl<UserDao, User>{
         return CommonResult.success(UPDATE_SUCCESS);
     }
 
+    @EnableRequestHeader
+    public void test(Map<String, String> header){
+        log.info("Service层收到的请求头：{}", header);
+    }
 
     /**
      *  模拟登录信息门户

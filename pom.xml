@@ -24,7 +24,7 @@
         <spring.cloud.alibaba>2021.0.4.0</spring.cloud.alibaba>
         <nacos.version>2021.0.4.0</nacos.version>
         <!-- Spring Cloud 版本 -->
-        <spring.cloud>2021.0.4</spring.cloud>
+        <spring.cloud>2021.0.5</spring.cloud>
         <spring-data-commons.version>2.6.1</spring-data-commons.version>
         <aspectj.version>1.9.7</aspectj.version>
         <commons.io.version>2.11.0</commons.io.version>
@@ -72,7 +72,6 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

@@ -17,7 +17,7 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableAspectJAutoProxy
-@ComponentScan({"mcsw.account", "mscw.common"})
+@ComponentScan(basePackages = {"mcsw.account", "mscw.common"})
 @Slf4j
 public class AccountApplication {
     public static void main(String[] args) {

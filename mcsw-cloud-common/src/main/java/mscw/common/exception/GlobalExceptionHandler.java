@@ -1,6 +1,7 @@
 package mscw.common.exception;
 
 import mscw.common.api.CommonResult;
+import mscw.common.exception.ApiException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

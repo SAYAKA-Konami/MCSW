@@ -54,7 +54,8 @@ public class AccountController {
     public CommonResult<String> testFilter(@RequestHeader Map<String, String> headers){
 
         log.info("接受到的用户实体类为：{}", headers);
-        log.info("接受到请求");
+        log.info("控制层接受到请求");
+        userService.test(headers);
         return CommonResult.success("hello! This is Account model");
     }
 

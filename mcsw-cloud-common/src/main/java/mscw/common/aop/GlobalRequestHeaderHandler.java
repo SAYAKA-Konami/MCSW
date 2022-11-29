@@ -24,16 +24,14 @@ public class GlobalRequestHeaderHandler {
     private static final String SUFFIX_MAJOR = "_major";
     @Resource
     private RedisService redisServiceImpl;
-
     /**
-     *  第一个参数为哈希表的方法
+     * 大坑——AOP横切Controller层会导致Tomcat无法启动
      */
-    @Pointcut("args(java.util.Map,..)")
-    public void collegeAndDegreeAndMajor() {}
-    @Pointcut("@target(org.springframework.web.bind.annotation.RestController)")
-    public void controller(){}
 
-    @Before("collegeAndDegreeAndMajor() && controller()")
+    @Pointcut("@annotation(mscw.common.aop.EnableRequestHeader)")
+    public void cut(){}
+
+    @Before("cut()")
     public void convert(JoinPoint joinPoint){
         Map<String, String> header = (Map<String, String>)joinPoint.getArgs()[0];
         String college = DictionaryOfCollegeAndDegree.getCode2collegeName().get(Integer.parseInt(header.get("college")));
