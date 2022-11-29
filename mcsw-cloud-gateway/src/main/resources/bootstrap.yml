@@ -1,0 +1,57 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /mG
+
+spring:
+  application:
+    name: mcsw-cloud-gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 43.139.88.73:8848
+        file-extension: yml
+        namespace: mcsw-dev
+        extension-configs[0]:
+          # 扩展配置文件
+          data-id: redis.yml
+          refresh: true
+      #注册中心
+      discovery:
+        server-addr: 43.139.88.73:8848
+        username: nacos
+        password: fivecent
+        namespace: mcsw-dev
+    gateway:
+      enabled: true
+      metrics:
+        # 开启 GatewayMetricsFilter
+        enabled: true
+      discovery:
+        locator:
+          # 开启服务发现动态路由
+          enabled: true
+          # 是否将服务名称小写
+          lower-case-service-id: true
+      routes:
+        - id: account
+          uri: lb://mcsw-cloud-account
+          predicates:
+            - Path=/mA/**
+#          filters:
+#            - PrefixPath=/mA/account/
+        - id: search
+          uri: lb://mcsw-cloud-search
+          predicates:
+            - Path=/mS/**
+# 白名单
+system:
+  properties:
+    whitelist: /mA/account/register,/mA/account/login,/mA/account/test
+
+
+
+
+
