@@ -106,7 +106,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
     }
 
     /**
-     * 补充反射中设置不了指
+     * 补充反射中设置不了的字段
      */
     private void buildCompleteUserVo(User user, UserVO userVo) {
         // User实体类种ID作为数据库主键被占用。所以这里得手动设置
@@ -119,6 +119,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
         userVo.setGenderCz(user.getGender()  == 0 ? "woman" : user.getGender() == 1 ? "man" : "unknown");
     }
 
+    @EnableRequestHeader
     public CommonResult<String> update(UserDto userDto){
         String account = userDto.getId();
         User user = new User();
