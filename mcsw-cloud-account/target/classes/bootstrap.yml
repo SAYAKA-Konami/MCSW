@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: mcsw-cloud-account
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      config:
+        server-addr: 43.139.88.73:8848
+        file-extension: yml
+        namespace: mcsw-dev
+        username: nacos
+        password: fivecent
+        extension-configs[0]:
+          data-id: datasource.yml
+          refresh: true
+
+
+      #注册中心
+      discovery:
+        server-addr: 43.139.88.73:8848
+        username: nacos
+        password: fivecent
+        namespace: mcsw-dev
+
+

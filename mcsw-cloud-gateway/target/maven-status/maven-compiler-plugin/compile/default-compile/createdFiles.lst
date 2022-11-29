@@ -1,0 +1,7 @@
+mcsw\gateway\config\ThreadPoolAutoConfiguration$1.class
+mcsw\gateway\config\ThreadPoolAutoConfiguration.class
+mcsw\gateway\config\SystemPropertiesConfig.class
+mcsw\gateway\controller\GateWayController.class
+mcsw\gateway\filter\AuthFilter.class
+mcsw\gateway\utils\JwtUtil.class
+mcsw\gateway\GateWayApplication.class
