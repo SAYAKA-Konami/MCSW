@@ -26,11 +26,13 @@ public interface UserDao extends BaseMapper<User> {
     @ResultMap("UserMap")
     @Select("select * from user where account = #{account}")
     User selectByAccountUser(@Param("account") String account);
+
+
     @Transactional
     void updateOne(User user);
 
     @Transactional
-    @Update("update user set password = #{passwd} where account = ${account}")
+    @Update("update user set passwd = #{passwd} where account = ${account}")
     void updatePasswd(@Param("account")String account, @Param("passwd") String passwd);
 
 

@@ -1,15 +1,16 @@
 server:
-  port: 8010
+  port: 8011
   servlet:
-    context-path: /mA
+    context-path: /mP
 spring:
   application:
-    name: mcsw-cloud-account
+    name: mcsw-cloud-post
   profiles:
     active: dev
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
   cloud:
     nacos:
       config:
@@ -34,10 +35,3 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
-
-mcsw:
-  account:
-    crawlerCoreActive: 5
-    crawlerMaxActive: 10
-    keepAliveSeconds: 60
-    userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36

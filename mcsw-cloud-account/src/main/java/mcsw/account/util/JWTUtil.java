@@ -2,8 +2,7 @@ package mcsw.account.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import mcsw.account.entity.User;
-import mcsw.account.model.vo.UserVO;
+import mscw.common.domain.vo.UserVO;
 import java.util.Date;
 import static mscw.common.config.Constants.SECRET_KEY;
 
@@ -16,6 +15,7 @@ public class JWTUtil {
                 .setExpiration(expire)
                 // 密码不参与Token的生成
                 .claim("id",user.getId())
+                .claim("account", user.getAccount())
                 .claim("name", user.getName())
                 .claim("gender", user.getGenderCz())
                 .claim("degree", user.getDegreeCz())

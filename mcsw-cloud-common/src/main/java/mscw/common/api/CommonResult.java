@@ -62,6 +62,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultCode.FAILED.getCode(), message, null);
     }
 
+    public static <T> CommonResult<T> failed(IErrorCode errorCode,T data) {
+        return new CommonResult<T>(errorCode.getCode(), "", null);
+    }
+
     /**
      * 失败返回结果
      */

@@ -1,9 +1,10 @@
-package mcsw.account;
+package mcsw.post;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -14,13 +15,15 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableAspectJAutoProxy
-@ComponentScan(basePackages = {"mcsw.account", "mscw.common"})
+@EnableDiscoveryClient
+@EnableFeignClients
+@ComponentScan(basePackages = {"mcsw.post", "mscw.common"})
 @Slf4j
-public class AccountApplication {
+public class PostApplication {
+
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(AccountApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(PostApplication.class, args);
         System.out.println("--------------------------------Swagger----------------------------------------------");
         Environment environment = context.getBean(Environment.class);
         String port = environment.getProperty("server.port");
@@ -35,4 +38,5 @@ public class AccountApplication {
 
         System.out.println("Swagger：http://"+ ip + ":" + port + path +"/swagger-ui/");
     }
+
 }

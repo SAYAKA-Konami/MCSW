@@ -6,8 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import mscw.common.api.CommonResult;
 import mscw.common.api.ResultCode;
-import mscw.common.domain.UserDto;
-import org.apache.commons.lang3.StringUtils;
+import mscw.common.domain.dto.UserDto;
 
 import static mscw.common.config.Constants.SECRET_KEY;
 
@@ -32,6 +31,7 @@ public class JwtUtil {
                 .parseClaimsJws(jwt)
                 .getBody();
             UserDto user = UserDto.builder().id(claims.get("id").toString())
+                    .account(claims.get("account").toString())
                     .name(claims.get("name").toString())
                     .gender(claims.get("gender").toString())
                     .degreeCz(claims.get("degree").toString())

@@ -2,6 +2,7 @@ package mscw.common.aop;
 
 import mscw.common.domain.DictionaryOfCollegeAndDegree;
 import mscw.common.service.RedisService;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -37,9 +38,13 @@ public class GlobalRequestHeaderHandler {
     public void convert(JoinPoint joinPoint){
         Map<String, String> header = (Map<String, String>)joinPoint.getArgs()[0];
         String college = DictionaryOfCollegeAndDegree.getCode2collegeName().get(Integer.parseInt(header.get("college")));
-        header.put("college", college);
+        if (StringUtils.isNotEmpty(college)) {
+            header.put("college", college);
+        }
         String degree = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ().get(Integer.parseInt(header.get("degree")));
-        header.put("degree", degree);
+        if (StringUtils.isNotEmpty(degree)) {
+            header.put("degree", degree);
+        }
         Optional.ofNullable(redisServiceImpl.get(header.get("id") + SUFFIX_MAJOR))
                 .ifPresent(major -> header.put("major", major.toString()));
     }

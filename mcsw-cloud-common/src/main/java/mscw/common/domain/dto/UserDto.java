@@ -1,4 +1,4 @@
-package mscw.common.domain;
+package mscw.common.domain.dto;
 
 import lombok.*;
 
@@ -11,10 +11,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserDto {
+
+    /**
+     * 数据库ID
+     */
+    private String id;
+
     /**
      * 用户昵称
      */
-
     private String name;
 
     private String gender;
@@ -22,7 +27,7 @@ public class UserDto {
     /**
      *  学号
      */
-    private String id;
+    private String account;
 
     /**
      *  登录学校信息门户的密码
@@ -44,6 +49,9 @@ public class UserDto {
     private String degreeCz;
 
     private Integer degree;
+    /**
+     *  0-代表当前对象内无内容。1-代表对象内有内容。
+     */
     private Integer status;
     private String clientId;
     private List<String> roles;

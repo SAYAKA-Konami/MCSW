@@ -12,6 +12,7 @@
         <module>mcsw-cloud-common</module>
         <module>mcsw-cloud-account</module>
         <module>mcsw-cloud-gateway</module>
+        <module>mcsw-cloud-post</module>
     </modules>
 
     <properties>
