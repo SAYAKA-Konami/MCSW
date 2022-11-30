@@ -15,6 +15,7 @@ public class JWTUtil {
                 .setExpiration(expire)
                 // 密码不参与Token的生成
                 .claim("id",user.getId())
+                .claim("account", user.getAccount())
                 .claim("name", user.getName())
                 .claim("gender", user.getGenderCz())
                 .claim("degree", user.getDegreeCz())

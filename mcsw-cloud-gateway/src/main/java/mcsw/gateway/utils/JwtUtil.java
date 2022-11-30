@@ -31,6 +31,7 @@ public class JwtUtil {
                 .parseClaimsJws(jwt)
                 .getBody();
             UserDto user = UserDto.builder().id(claims.get("id").toString())
+                    .account(claims.get("account").toString())
                     .name(claims.get("name").toString())
                     .gender(claims.get("gender").toString())
                     .degreeCz(claims.get("degree").toString())

@@ -11,10 +11,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserDto {
+
+    /**
+     * 数据库ID
+     */
+    private String id;
+
     /**
      * 用户昵称
      */
-
     private String name;
 
     private String gender;
@@ -22,7 +27,7 @@ public class UserDto {
     /**
      *  学号
      */
-    private String id;
+    private String account;
 
     /**
      *  登录学校信息门户的密码

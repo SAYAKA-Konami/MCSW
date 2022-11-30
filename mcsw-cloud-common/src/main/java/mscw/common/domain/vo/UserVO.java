@@ -10,9 +10,14 @@ public class UserVO implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     /**
-     * 唯一id，这里直接利用学号做标识码。
+     * 唯一id
      */
     private String id;
+
+    /**
+     *  账号。这里是学号
+     */
+    private String account;
 
     /**
      * 登录名

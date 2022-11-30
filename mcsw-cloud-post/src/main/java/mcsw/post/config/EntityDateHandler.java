@@ -1,4 +1,4 @@
-package mcsw.account.config;
+package mcsw.post.config;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;

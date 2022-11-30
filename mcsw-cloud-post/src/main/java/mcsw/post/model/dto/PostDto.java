@@ -13,14 +13,18 @@ import javax.validation.constraints.NotNull;
 public class PostDto {
 
     @NotNull
-    @Schema(name = "account", description = "账号/学号")
-    private String account;
+    @Schema(description = "用户ID", required = true)
+    private Integer id;
 
     @NotNull
-    @Schema(name = "title", description = "帖子标题")
+    @Schema(description = "帖子类型。0-工作，1-公务员，2-考研, 3-保研", required = true)
+    private Integer category;
+
+    @NotNull
+    @Schema(description = "帖子标题", required = true)
     private String title;
 
     @NotNull
-    @Schema(name = "content", description = "帖子内容")
+    @Schema(description = "帖子内容", required = true)
     private String content;
 }
