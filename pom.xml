@@ -14,14 +14,6 @@
         <module>mcsw-cloud-gateway</module>
         <module>mcsw-cloud-post</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>mcsw</groupId>
-            <artifactId>mcsw-cloud-post</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 
     <properties>
         <spring.version>2.6.11</spring.version>

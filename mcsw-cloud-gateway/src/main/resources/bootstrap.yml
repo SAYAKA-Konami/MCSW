@@ -18,6 +18,9 @@ spring:
           # 扩展配置文件
           data-id: redis.yml
           refresh: true
+        extension-configs[1]:
+          data-id: system.yml
+          refresh: true
       #注册中心
       discovery:
         server-addr: 43.139.88.73:8848
@@ -43,13 +46,13 @@ spring:
 #          filters:
 #            - PrefixPath=/mA/account/
         - id: search
-          uri: lb://mcsw-cloud-search
+          uri: lb://mcsw-cloud-post
           predicates:
-            - Path=/mS/**
-# 白名单
-system:
-  properties:
-    whitelist: /mA/account/register,/mA/account/login,/mA/account/test
+            - Path=/mP/**
+## 白名单
+#system:
+#  properties:
+#    whitelist: /mA/account/register,/mA/account/login,/mA/account/test
 
 
 

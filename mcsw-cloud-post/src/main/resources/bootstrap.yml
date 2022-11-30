@@ -1,5 +1,5 @@
 server:
-  port: 8002
+  port: 8011
   servlet:
     context-path: /mP
 spring:
@@ -7,6 +7,9 @@ spring:
     name: mcsw-cloud-post
   profiles:
     active: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   cloud:
     nacos:
