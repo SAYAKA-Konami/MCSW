@@ -3,8 +3,13 @@ package mcsw.account.service;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.http.HttpRequest;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import mcsw.post.entity.Post;
 import mscw.common.aop.EnableRequestHeader;
 import mcsw.account.config.Constant;
 import mcsw.account.config.ValueFromNacos;
@@ -42,7 +47,7 @@ import static mcsw.account.config.Constant.*;
  */
 @Service
 @Slf4j
-public class UserService extends ServiceImpl<UserDao, User>{
+public class UserService extends ServiceImpl<UserDao, User> implements IService<User> {
     @Resource
     private CrawlerUtil crawlerUtil;
     @Resource
@@ -55,6 +60,7 @@ public class UserService extends ServiceImpl<UserDao, User>{
     private UserDao userDao;
     @Autowired
     private RedisService redisService;
+
 
     /**
      *  注册
@@ -113,6 +119,27 @@ public class UserService extends ServiceImpl<UserDao, User>{
         }
     }
 
+    @EnableRequestHeader
+    public CommonResult<String> update(UserDto userDto){
+        String account = userDto.getId();
+        User user = new User();
+        BeanUtils.copyProperties(userDto, user);
+        user.setAccount(account);
+        userDao.updateOne(user);
+        return CommonResult.success(UPDATE_SUCCESS);
+    }
+
+    public CommonResult<UserVO> getUserInfoByName(String name){
+        Wrapper<User> wrapper = new QueryWrapper<User>().eq("name", name);
+        User user = userDao.selectOne(wrapper);
+        Map<Integer, String> code_degreecz = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ();
+        Map<Integer, String> code2collegeName = DictionaryOfCollegeAndDegree.getCode2collegeName();
+        UserVO userVO = new UserVO().setName(user.getName()).setCollegeCz(code2collegeName.get(user.getCollege()))
+                .setDegreeCz(code_degreecz.get(user.getDegree())).setGenderCz(user.getGender() == 1 ? "男" : user.getGender() == 2 ? "女" : "未定义")
+                .setMajor(user.getMajor());
+        return CommonResult.success(userVO);
+    }
+
     /**
      * 补充反射中设置不了的字段
      */
@@ -123,16 +150,6 @@ public class UserService extends ServiceImpl<UserDao, User>{
         Map<Integer, String> code_degreecz = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ();
         userVo.setDegreeCz(code_degreecz.get(user.getDegree()));
         userVo.setGenderCz(user.getGender()  == 0 ? "woman" : user.getGender() == 1 ? "man" : "unknown");
-    }
-
-    @EnableRequestHeader
-    public CommonResult<String> update(UserDto userDto){
-        String account = userDto.getId();
-        User user = new User();
-        BeanUtils.copyProperties(userDto, user);
-        user.setAccount(account);
-        userDao.updateOne(user);
-        return CommonResult.success(UPDATE_SUCCESS);
     }
 
     @EnableRequestHeader

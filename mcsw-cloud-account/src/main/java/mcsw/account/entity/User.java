@@ -44,6 +44,11 @@ public class User {
      */
     private String major;
 
+    /**
+     *  个人简介。长度不超过30
+     */
+    private String introduction;
+
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 

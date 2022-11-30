@@ -3,7 +3,8 @@ package mcsw.post.dao;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.*;
 import mcsw.post.entity.Post;
 
 /**
@@ -12,7 +13,13 @@ import mcsw.post.entity.Post;
  * @author Nan
  * @since 2022-11-30 10:58:03
  */
+@Mapper
 public interface PostDao extends BaseMapper<Post> {
+
+    @ResultMap("PostMap")
+    @Select("select * from post where user_id = #{id}")
+    IPage<Post> selectAllByUserId(IPage<?> page, @Param("user_id") Integer userId);
+
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）

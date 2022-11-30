@@ -21,6 +21,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class Reply{
+
     @TableId(type = IdType.AUTO)
     private Integer id;
     /**
@@ -43,10 +44,10 @@ public class Reply{
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    
+
     @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
 
-    }
+}
 

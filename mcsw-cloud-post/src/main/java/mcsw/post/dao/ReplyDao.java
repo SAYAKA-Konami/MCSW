@@ -3,6 +3,7 @@ package mcsw.post.dao;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import mcsw.post.entity.Reply;
 
@@ -12,6 +13,7 @@ import mcsw.post.entity.Reply;
  * @author Nan
  * @since 2022-11-30 11:06:46
  */
+@Mapper
 public interface ReplyDao extends BaseMapper<Reply> {
 
     /**

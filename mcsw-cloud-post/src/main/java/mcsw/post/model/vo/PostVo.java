@@ -25,8 +25,7 @@ public class PostVo {
     @Schema(name = "content", description = "帖子内容")
     private String content;
 
-    // TODO :时间格式
-    @JsonFormat()
+    @JsonFormat(pattern="yyyy-MM-dd" ,timezone="GMT+8")
     @Schema(name = "createTime", description = "发帖时间")
     private Date createTime;
 

@@ -7,6 +7,7 @@ import mcsw.account.model.dto.UserLoginDto;
 import mscw.common.domain.vo.AuthVO;
 import mcsw.account.service.UserService;
 import mscw.common.api.CommonResult;
+import mscw.common.domain.vo.UserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,12 @@ public class AccountController {
     @PostMapping("/update")
     public CommonResult<String> update(@RequestBody UserDto userDto){
         return userService.update(userDto);
+    }
+
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping("/getUserInfo")
+    public CommonResult<UserVO> getUserInfo(@RequestParam("name") String name){
+        return userService.getUserInfoByName(name);
     }
 
     @GetMapping("/test")
