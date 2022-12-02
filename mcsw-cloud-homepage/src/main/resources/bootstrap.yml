@@ -1,0 +1,37 @@
+server:
+  port: 8012
+  servlet:
+    context-path: /mH
+spring:
+  application:
+    name: mcsw-cloud-homepage
+  profiles:
+    active: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  cloud:
+    nacos:
+      config:
+        server-addr: 43.139.88.73:8848
+        file-extension: yml
+        # 默认会加载配置中心的 mcsw-cloud-account-dev.yml
+        namespace: mcsw-dev
+        username: nacos
+        password: fivecent
+        extension-configs[0]:
+          # 扩展配置文件
+          data-id: datasource.yml
+          refresh: true
+
+
+      #注册中心
+      discovery:
+        server-addr: 43.139.88.73:8848
+        username: nacos
+        password: fivecent
+        namespace: mcsw-dev
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml

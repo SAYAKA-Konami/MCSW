@@ -13,6 +13,7 @@
         <module>mcsw-cloud-account</module>
         <module>mcsw-cloud-gateway</module>
         <module>mcsw-cloud-post</module>
+        <module>mcsw-cloud-homepage</module>
     </modules>
 
     <properties>
