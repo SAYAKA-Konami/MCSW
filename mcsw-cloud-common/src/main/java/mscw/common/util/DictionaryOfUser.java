@@ -1,4 +1,4 @@
-package mscw.common.domain;
+package mscw.common.util;
 
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * @since  2022/11/28
  **/
 
-public class DictionaryOfCollegeAndDegree {
+public class DictionaryOfUser {
     /**
      *  数字对应相应的名称
      */
@@ -84,5 +84,23 @@ public class DictionaryOfCollegeAndDegree {
             return code;
         }
     }
+
+    public static Integer genderCzToCode(String gender){
+        switch (gender) {
+            case "男": return 1;
+            case "女": return 0;
+            default: return -1;
+        }
+    }
+
+    public static String genderToChinese(int gender){
+        switch (gender) {
+            case 0: return "男";
+            case 1: return "女";
+            default: return "未定义";
+        }
+    }
+
+
 }
 

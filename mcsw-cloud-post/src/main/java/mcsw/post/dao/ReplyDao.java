@@ -17,6 +17,11 @@ import mcsw.post.entity.Reply;
 public interface ReplyDao extends BaseMapper<Reply> {
 
     /**
+     *  获取有关帖子的评论数
+     */
+    int countReplyNumOfPost(@Param("postId") Integer postId);
+
+    /**
      * 批量新增数据（MyBatis原生foreach方法）
      *
      * @param entities List<Reply> 实例对象列表

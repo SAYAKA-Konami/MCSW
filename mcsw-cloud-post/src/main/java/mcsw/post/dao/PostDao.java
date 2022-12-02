@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.*;
 import mcsw.post.entity.Post;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * (Post)表数据库访问层
@@ -18,7 +19,16 @@ public interface PostDao extends BaseMapper<Post> {
 
     @ResultMap("PostMap")
     @Select("select * from post where user_id = #{id}")
-    IPage<Post> selectAllByUserId(IPage<?> page, @Param("user_id") Integer userId);
+    List<Post> selectAllByUserId(@Param("id") Integer userId);
+
+    @ResultMap("PostMap")
+    @Select("select * from post where user_id = #{id}")
+    IPage<Post> selectAllByUserId(@Param("page")IPage<Post> page, @Param("id") Integer userId);
+
+    @Transactional
+    @ResultType(Integer.class)
+    @Update("update  post set like = #{likeNum} where id = #{postId}")
+    int likeIncrease(@Param("likeNum") Integer likeNum, @Param("postId") Integer postId);
 
 
     /**

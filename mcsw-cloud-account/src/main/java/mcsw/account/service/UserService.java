@@ -21,7 +21,7 @@ import mcsw.account.util.GetRSAPasswdUtil;
 import mcsw.account.util.JWTUtil;
 import mcsw.account.util.filter.HandleRegister;
 import mscw.common.api.CommonResult;
-import mscw.common.domain.DictionaryOfCollegeAndDegree;
+import mscw.common.util.DictionaryOfUser;
 import mscw.common.service.RedisService;
 import mscw.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -130,8 +130,8 @@ public class UserService extends ServiceImpl<UserDao, User> implements IService<
     public CommonResult<UserVO> getUserInfoByName(String name){
         Wrapper<User> wrapper = new QueryWrapper<User>().eq("name", name);
         User user = userDao.selectOne(wrapper);
-        Map<Integer, String> code_degreecz = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ();
-        Map<Integer, String> code2collegeName = DictionaryOfCollegeAndDegree.getCode2collegeName();
+        Map<Integer, String> code_degreecz = DictionaryOfUser.getCODE_DEGREECZ();
+        Map<Integer, String> code2collegeName = DictionaryOfUser.getCode2collegeName();
         UserVO userVO = new UserVO().setName(user.getName()).setCollegeCz(code2collegeName.get(user.getCollege()))
                 .setDegreeCz(code_degreecz.get(user.getDegree())).setGenderCz(user.getGender() == 1 ? "男" : user.getGender() == 2 ? "女" : "未定义")
                 .setMajor(user.getMajor());
@@ -142,10 +142,10 @@ public class UserService extends ServiceImpl<UserDao, User> implements IService<
      * 补充反射中设置不了的字段
      */
     private void buildCompleteUserVo(User user, UserVO userVo) {
-        Map<Integer, String> code2collegeName = DictionaryOfCollegeAndDegree.getCode2collegeName();
+        Map<Integer, String> code2collegeName = DictionaryOfUser.getCode2collegeName();
         // 手动设置学院名称
         userVo.setCollegeCz(code2collegeName.get(user.getCollege()));
-        Map<Integer, String> code_degreecz = DictionaryOfCollegeAndDegree.getCODE_DEGREECZ();
+        Map<Integer, String> code_degreecz = DictionaryOfUser.getCODE_DEGREECZ();
         userVo.setDegreeCz(code_degreecz.get(user.getDegree()));
         userVo.setGenderCz(user.getGender()  == 0 ? "woman" : user.getGender() == 1 ? "man" : "unknown");
     }

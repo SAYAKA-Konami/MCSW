@@ -13,9 +13,13 @@
         <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
     </resultMap>
 
+    <select id="countReplyNumOfPost" resultType="INTEGER">
+        select count(*) from mcsw.reply where post_id = #{postId}
+    </select>
+
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.reply(reply_content, user_id, post_id, create_time, update_time, like, parent_id)
+        insert into mcsw.reply(reply_content, user_id, post_id, create_time, update_time, 'like', parent_id)
         values
         <foreach collection="entities" item="entity" separator=",">
         (#{entity.replyContent}, #{entity.userId}, #{entity.postId}, #{entity.createTime}, #{entity.updateTime}, #{entity.like}, #{entity.parentId})
@@ -23,7 +27,7 @@
     </insert>
     <!-- 批量插入或按主键更新 -->
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.reply(reply_content, user_id, post_id, create_time, update_time, like, parent_id)
+        insert into mcsw.reply(reply_content, user_id, post_id, create_time, update_time, 'like', parent_id)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.replyContent}, #{entity.userId}, #{entity.postId}, #{entity.createTime}, #{entity.updateTime}, #{entity.like}, #{entity.parentId})

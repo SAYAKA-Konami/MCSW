@@ -32,4 +32,12 @@ public class PostVo {
     @Schema(name = "userVo", description = "发帖用户信息")
     private UserVO userVO;
 
+    @Schema(description = "点赞数")
+    private Integer like;
+
+    @Schema(description = "回复数")
+    private Integer replyNum;
+    @Schema(description = "帖子类别。0-work,1-cs,2master")
+    private Integer category;
+
 }

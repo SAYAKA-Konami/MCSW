@@ -5,10 +5,9 @@ import mcsw.gateway.config.SystemPropertiesConfig;
 import mcsw.gateway.utils.JwtUtil;
 import mscw.common.api.CommonResult;
 import mscw.common.api.ResultCode;
-import mscw.common.domain.DictionaryOfCollegeAndDegree;
+import mscw.common.util.DictionaryOfUser;
 import mscw.common.domain.dto.UserDto;
 import mscw.common.domain.vo.AuthVO;
-import mscw.common.domain.vo.UserVO;
 import mscw.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +24,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import springfox.documentation.spring.web.json.Json;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -69,8 +67,8 @@ public class AuthFilter implements GlobalFilter {
             if (result.getCode() == ResultCode.SUCCESS.getCode()) {
                 // 认证通过
                 UserDto user = result.getData();
-                Map<String, Integer> degreecz_code = DictionaryOfCollegeAndDegree.getDEGREECZ_CODE();
-                Map<String, Integer> collegeName_code = DictionaryOfCollegeAndDegree.getCollegeName_code();
+                Map<String, Integer> degreecz_code = DictionaryOfUser.getDEGREECZ_CODE();
+                Map<String, Integer> collegeName_code = DictionaryOfUser.getCollegeName_code();
                 // 放置到Redis中
                 redisTemplate.opsForValue().set(user.getId() + SUFFIX_MAJOR, user.getMajor());
                 // 追加请求头用户信息
