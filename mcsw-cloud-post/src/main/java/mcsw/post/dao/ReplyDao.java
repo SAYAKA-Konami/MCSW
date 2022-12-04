@@ -1,11 +1,13 @@
 package mcsw.post.dao;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import mcsw.post.entity.Reply;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import mcsw.post.entity.Reply;
+import org.apache.ibatis.annotations.ResultType;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * (Reply)表数据库访问层
@@ -16,9 +18,12 @@ import mcsw.post.entity.Reply;
 @Mapper
 public interface ReplyDao extends BaseMapper<Reply> {
 
+
     /**
      *  获取有关帖子的评论数
      */
+    @ResultType(Integer.class)
+    @Select(" select count(*) from mcsw.reply where post_id = #{postId}")
     int countReplyNumOfPost(@Param("postId") Integer postId);
 
     /**

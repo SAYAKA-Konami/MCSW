@@ -13,9 +13,7 @@
         <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="countReplyNumOfPost" resultType="INTEGER">
-        select count(*) from mcsw.reply where post_id = #{postId}
-    </select>
+
 
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">

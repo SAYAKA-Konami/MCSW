@@ -24,6 +24,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
         return replyDao.countReplyNumOfPost(postId);
     }
 
+
     @Autowired
     public void setReplyDao(ReplyDao replyDao) {
         this.replyDao = replyDao;

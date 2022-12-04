@@ -94,7 +94,10 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
 
     /**
      *  点赞帖子...
+     *  该方案并不好。每次点赞都需要进行一次数据库的读写操作，对数据库造成一定的压力。
+     *  故先标识废弃
      */
+    @Deprecated
     @Transactional
     public CommonResult<String> likePost(Map<String, String> header, LikePostDto likePostDto){
         String userId = header.get("id");
