@@ -13,12 +13,12 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 
-public class QueryMapOfUserName implements Callable<Optional<Map<String, String>>> {
+public class QueryMapOfUserNameTask implements Callable<Optional<Map<String, String>>> {
     private UserClient userClient;
 
     private List<Reply> replyList;
 
-    public QueryMapOfUserName(UserClient userClient, List<Reply> replyList) {
+    public QueryMapOfUserNameTask(UserClient userClient, List<Reply> replyList) {
         this.userClient = userClient;
         this.replyList = replyList;
     }

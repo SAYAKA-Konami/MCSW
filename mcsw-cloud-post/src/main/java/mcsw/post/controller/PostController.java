@@ -1,7 +1,6 @@
 package mcsw.post.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import mcsw.post.manager.ManagerService;
@@ -12,7 +11,6 @@ import mscw.common.api.CommonResult;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
 import mscw.common.domain.vo.PostWithReply;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -60,13 +58,19 @@ public class PostController {
 
     @PostMapping("/likePost")
     @ApiOperation("点赞")
-    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody LikePostDto likePostDto){
-        return postService.likePost(header, likePostDto);
+    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody RequestLikePostDto requestLikePostDto){
+        return postService.likePost(header, requestLikePostDto);
     }
 
     @PostMapping("/reply")
     @ApiOperation("评论")
     public CommonResult<String> reply(@RequestBody RequestReplyDto requestReplyDto){
         return replyService.reply(requestReplyDto);
+    }
+
+    @PostMapping("/likeReply")
+    @ApiOperation("评论点赞")
+    public CommonResult<String> likeReply(@RequestBody RequestLikeReplyDto likeReplyDto){
+        return replyService.likeReply(likeReplyDto);
     }
 }

@@ -1,34 +1,38 @@
 package mcsw.post.service;
 
 import cn.hutool.http.HttpStatus;
-import com.alibaba.nacos.api.naming.pojo.healthcheck.impl.Http;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import mcsw.post.client.UserClient;
-import mcsw.post.config.ThreadPoolAutoConfiguration;
 import mcsw.post.dao.ReplyDao;
 import mcsw.post.entity.Reply;
 import mcsw.post.model.dto.ReplyNestedDto;
 import mcsw.post.model.dto.ReplyPostDto;
+import mcsw.post.model.dto.RequestLikeReplyDto;
 import mcsw.post.model.dto.RequestReplyDto;
-import mcsw.post.task.QueryMapOfUserName;
+import mcsw.post.task.QueryMapOfUserNameTask;
 import mscw.common.api.CommonResult;
 import mscw.common.domain.vo.ReplyVo;
 import mscw.common.domain.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-import static mcsw.post.config.Constants.REPLY_SUCCESS;
-import static mcsw.post.config.Constants.server_error;
+import static mcsw.post.config.Constants.*;
 
 /**
  * (Reply)表服务实现类
@@ -47,8 +51,44 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     @Resource
     private ThreadPoolTaskExecutor postTaskExecutor;
 
+    private RedisTemplate<String, Integer> redisTemplate;
+
+    private final ReentrantLock lock = new ReentrantLock();
+
     public int countReplyNumOfPost(Integer postId){
         return replyDao.countReplyNumOfPost(postId);
+    }
+
+    /**
+     *  点赞评论。
+     * @apiNote 先Redis中的内容，然后定时任务更新数据库。
+     */
+    public CommonResult<String> likeReply(RequestLikeReplyDto likeReplyDto){
+        String key = REPLY_LIKE_KEY_PREFIX + likeReplyDto.getReplyId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))){
+            redisTemplate.opsForValue().increment(key);
+        }else{
+            lock.lock();
+            try {
+                if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+                    // 如果此时缓存已经存在。直接执行自增操作即可
+                    redisTemplate.opsForValue().increment(key);
+                    return CommonResult.success(LIKE_SUCCESS);
+                }
+                // 查不到到数据库中查
+                Reply reply = replyDao.selectById(likeReplyDto.getReplyId());
+                if (!Objects.isNull(reply)) {
+                    // 一小时后过期
+                    redisTemplate.opsForValue().set(key, reply.getLike() + 1, Duration.ofHours(1));
+                }else{
+                    log.error("点赞评论出错。数据库中不存在该评论！");
+                    return CommonResult.failed(SERVER_ERROR);
+                }
+            }finally {
+                lock.unlock();
+            }
+        }
+        return CommonResult.success(LIKE_SUCCESS);
     }
 
     /**
@@ -66,7 +106,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                     .setParentId(replyNestedDto.getParentId())
                     .setLike(0);
             if (queryUserIdAndFillEntity(replyNestedDto.getUserName(), reply)) {
-                return CommonResult.failed(server_error);
+                return CommonResult.failed(SERVER_ERROR);
             }
         }else{
             // 回复帖子
@@ -74,10 +114,10 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                     .setPostId(replyPostDto.getPostId())
                     .setLike(0);
             if (queryUserIdAndFillEntity(replyPostDto.getUserName(), reply)) {
-                return CommonResult.failed(server_error);
+                return CommonResult.failed(SERVER_ERROR);
             }
         }
-        return replyDao.insert(reply) == 1 ? CommonResult.success(REPLY_SUCCESS) : CommonResult.failed(server_error);
+        return replyDao.insert(reply) == 1 ? CommonResult.success(REPLY_SUCCESS) : CommonResult.failed(SERVER_ERROR);
     }
 
     private boolean queryUserIdAndFillEntity(String userName, Reply reply) {
@@ -101,8 +141,8 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                 .select("id", "post_id", "user_id", "reply_content", "like", "create_time", "update_time")
                 .eq("post_id", postId);
         List<Reply> replies = replyDao.selectList(queryWrapper);
-        QueryMapOfUserName queryMapOfUserName = new QueryMapOfUserName(userClient, replies);
-        Future<Optional<Map<String, String>>> mapFuture = postTaskExecutor.submit(queryMapOfUserName);
+        QueryMapOfUserNameTask queryMapOfUserNameTask = new QueryMapOfUserNameTask(userClient, replies);
+        Future<Optional<Map<String, String>>> mapFuture = postTaskExecutor.submit(queryMapOfUserNameTask);
         // 找出所有帖子的直接回复
         List<ReplyVo> topReply = replies.stream().filter(reply -> reply.getParentId() == null).map(this::convertReplyToVo).collect(Collectors.toList());
         Map<Integer, List<ReplyVo>> parentId_subReplys = Maps.newHashMapWithExpectedSize(replies.size() - topReply.size());
@@ -144,7 +184,22 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
             log.error("查询用户信息出错...");
             return topReply;
         }
+        // 更新帖子的点赞数
+        synReplyLike(topReply);
         return topReply;
+    }
+
+    /**
+     *  如果Redis中存在数据。那么点赞数为Redis中的数据，否则以数据库中的数据为准
+     */
+    private void synReplyLike(List<ReplyVo> topReply) {
+        for (ReplyVo replyVo : topReply) {
+            String key = REPLY_LIKE_KEY_PREFIX + replyVo.getId();
+            if (redisTemplate.hasKey(key)) {
+                replyVo.setLike(redisTemplate.opsForValue().get(key));
+            }
+            synReplyLike(replyVo.getSubReply());
+        }
     }
 
     /**
@@ -183,6 +238,11 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     @Autowired
     public void setUserClient(UserClient userClient) {
         this.userClient = userClient;
+    }
+
+    @Resource
+    public void setRedisTemplate(RedisTemplate<String, Integer> redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }
 

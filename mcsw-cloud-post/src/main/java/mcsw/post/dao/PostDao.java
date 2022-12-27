@@ -1,6 +1,7 @@
 package mcsw.post.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,6 +30,9 @@ public interface PostDao extends BaseMapper<Post> {
     @ResultType(Integer.class)
     @Update("update  post set like = #{likeNum} where id = #{postId}")
     int likeIncrease(@Param("likeNum") Integer likeNum, @Param("postId") Integer postId);
+
+    @Transactional
+    void updateLikeNumBatch(@Param("entities")List<Map<String, Object>> entities);
 
 
     /**

@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (Reply)表数据库访问层
@@ -17,6 +19,12 @@ import java.util.List;
  */
 @Mapper
 public interface ReplyDao extends BaseMapper<Reply> {
+
+    /**
+     * @param entities 每一个Map只包含两个键值对，一个是key为id，值为评论id，另一个是key为likeNum，值为点赞数
+     */
+    @Transactional
+    void updateLikeNumBatch(@Param("entities")List<Map<String, Object>> entities);
 
 
     /**

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.post.client.UserClient;
 import mcsw.post.dao.PostDao;
 import mcsw.post.entity.Post;
-import mcsw.post.model.dto.LikePostDto;
+import mcsw.post.model.dto.RequestLikePostDto;
 import mcsw.post.model.dto.PostDto;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
@@ -99,24 +99,24 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
      */
     @Deprecated
     @Transactional
-    public CommonResult<String> likePost(Map<String, String> header, LikePostDto likePostDto){
+    public CommonResult<String> likePost(Map<String, String> header, RequestLikePostDto requestLikePostDto){
         String userId = header.get("id");
         // 如果已经点赞过了，那么直接返回。
         // Redis中以帖子ID为Key，用户为一个集合
-        if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(likePostDto.getPostId(), userId))) {
+        if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(requestLikePostDto.getPostId(), userId))) {
             return CommonResult.failed(HAS_LIKED);
         }
-        Post oldPost = postDao.selectOne(new QueryWrapper<Post>().select("id", "like").eq("id", likePostDto.getPostId()));
+        Post oldPost = postDao.selectOne(new QueryWrapper<Post>().select("id", "like").eq("id", requestLikePostDto.getPostId()));
         if (oldPost == null) {
             return CommonResult.failed(POST_NOT_FOUND);
         }
         int effect = postDao.likeIncrease(oldPost.getLike() + 1, oldPost.getId());
         if (effect == 1){
             // 记录到缓存中
-            redisTemplate.opsForSet().add(likePostDto.getPostId(), userId);
+            redisTemplate.opsForSet().add(requestLikePostDto.getPostId(), userId);
             return CommonResult.success(LIKE_SUCCESS);
         }else{
-            return CommonResult.failed(server_error);
+            return CommonResult.failed(SERVER_ERROR);
         }
     }
 

@@ -14,8 +14,18 @@ public interface Constants {
 
     String LIKE_SUCCESS = "点赞成功!";
 
-    String server_error = "服务器被吃了T ^ T";
+    String SERVER_ERROR = "服务器被吃了T ^ T";
 
     String REPLY_SUCCESS = "评论成功！";
+
+    /**
+     *  评论点赞数前缀
+     */
+    String REPLY_LIKE_KEY_PREFIX = "reply_like_";
+
+    /**
+     *  帖子点赞数前缀
+     */
+    String POST_LIKE_KEY_PREFIX = "post_like_";
 
 }

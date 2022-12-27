@@ -7,9 +7,9 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel("点赞")
-public class LikePostDto {
+@ApiModel("点赞评论信息")
+public class RequestLikeReplyDto {
     @NotNull
-    @Schema(description = "帖子id", required = true)
-    private Integer postId;
+    @Schema(description = "评论id", required = true)
+    private Integer replyId;
 }

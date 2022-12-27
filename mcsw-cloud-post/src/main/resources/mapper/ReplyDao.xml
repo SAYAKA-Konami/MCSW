@@ -13,6 +13,21 @@
         <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
     </resultMap>
 
+    <update id="updateLikeNumBatch">
+        update reply
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="like = case" suffix="end,">
+                <foreach collection="entities" item="entity" index="index">
+                    when id=#{entity.id}
+                    then #{entity.num}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="entities" item="entity" index="index" separator="," open="(" close=")">
+            #{entity.id}
+        </foreach>
+    </update>
 
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">

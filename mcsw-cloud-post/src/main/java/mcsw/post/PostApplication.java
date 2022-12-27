@@ -9,6 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -18,6 +19,7 @@ import java.net.UnknownHostException;
 @EnableAspectJAutoProxy
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableScheduling
 @ComponentScan(basePackages = {"mcsw.post", "mscw.common"})
 @Slf4j
 public class PostApplication {
