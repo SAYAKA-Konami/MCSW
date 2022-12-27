@@ -1,5 +1,6 @@
 package mcsw.post.service;
 
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -52,12 +53,12 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
     /**
      * 用户发帖
      */
-    public boolean insertNewPost(PostDto postDto){
+    public CommonResult<String> insertNewPost(PostDto postDto){
         Post post = new Post();
         // 默认点赞数为0
         post.setLike(0).setContent(postDto.getContent()).setTitle(postDto.getTitle())
                 .setUserId(postDto.getId()).setCategory(postDto.getCategory());
-        return this.save(post);
+        return this.save(post) ? CommonResult.success(POST_SUCCESS) : CommonResult.failed(POST_FAILED);
     }
 
     /**
@@ -117,6 +118,15 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
         }else{
             return CommonResult.failed(server_error);
         }
+    }
+
+    /**
+     *  根据帖子id获取帖子信息并转化成PostVO
+     */
+    public PostVo getPostById(Integer postId){
+        Post post = postDao.selectById(postId);
+        List<Post> of = ListUtil.of(post);
+        return statisticsReplyNumAndConvertIntoPostVo(of).get(0);
     }
 
 

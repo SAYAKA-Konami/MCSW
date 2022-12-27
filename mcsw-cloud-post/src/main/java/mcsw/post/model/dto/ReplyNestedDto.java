@@ -11,15 +11,19 @@ import javax.validation.constraints.NotNull;
 @ApiModel("回复评论")
 @Builder
 public class ReplyNestedDto {
-    @Schema(name = "account", description = "账号")
+    @Schema(name = "userName", description = "账号")
     @NotNull
-    private String account;
+    private String userName;
 
     @NotNull
     @Schema(name = "content", description = "内容")
-    private String content;
+    private String replyContent;
 
     @NotNull
-    @Schema(name = "parentId", description = "评论的ID")
+    @Schema(name = "parentId", description = "被评论的ID")
     private Integer parentId;
+
+    @NotNull
+    @Schema(name = "postId", description = "被评论的帖子的ID")
+    private Integer postId;
 }

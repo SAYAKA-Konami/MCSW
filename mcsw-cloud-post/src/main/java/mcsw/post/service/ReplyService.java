@@ -1,5 +1,7 @@
 package mcsw.post.service;
 
+import cn.hutool.http.HttpStatus;
+import com.alibaba.nacos.api.naming.pojo.healthcheck.impl.Http;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,8 +11,13 @@ import mcsw.post.client.UserClient;
 import mcsw.post.config.ThreadPoolAutoConfiguration;
 import mcsw.post.dao.ReplyDao;
 import mcsw.post.entity.Reply;
+import mcsw.post.model.dto.ReplyNestedDto;
+import mcsw.post.model.dto.ReplyPostDto;
+import mcsw.post.model.dto.RequestReplyDto;
 import mcsw.post.task.QueryMapOfUserName;
+import mscw.common.api.CommonResult;
 import mscw.common.domain.vo.ReplyVo;
+import mscw.common.domain.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -19,6 +26,9 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+
+import static mcsw.post.config.Constants.REPLY_SUCCESS;
+import static mcsw.post.config.Constants.server_error;
 
 /**
  * (Reply)表服务实现类
@@ -42,6 +52,47 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     }
 
     /**
+     *  评论
+     * @apiNote 该方法包含了评论的两种情形
+     */
+    public CommonResult<String> reply(RequestReplyDto requestReplyDto){
+        ReplyPostDto replyPostDto = requestReplyDto.getReplyPostDto();
+        Reply reply = new Reply();
+        if (Objects.isNull(replyPostDto)) {
+            // 回复评论
+            ReplyNestedDto replyNestedDto = requestReplyDto.getReplyNestedDto();
+            reply.setReplyContent(replyNestedDto.getReplyContent())
+                    .setPostId(replyNestedDto.getPostId())
+                    .setParentId(replyNestedDto.getParentId())
+                    .setLike(0);
+            if (queryUserIdAndFillEntity(replyNestedDto.getUserName(), reply)) {
+                return CommonResult.failed(server_error);
+            }
+        }else{
+            // 回复帖子
+            reply.setReplyContent(replyPostDto.getReplyContent())
+                    .setPostId(replyPostDto.getPostId())
+                    .setLike(0);
+            if (queryUserIdAndFillEntity(replyPostDto.getUserName(), reply)) {
+                return CommonResult.failed(server_error);
+            }
+        }
+        return replyDao.insert(reply) == 1 ? CommonResult.success(REPLY_SUCCESS) : CommonResult.failed(server_error);
+    }
+
+    private boolean queryUserIdAndFillEntity(String userName, Reply reply) {
+        CommonResult<UserVO> userInfo = userClient.getUserInfo(userName);
+        if (userInfo.getCode() == HttpStatus.HTTP_OK) {
+            String id = userInfo.getData().getId();
+            reply.setUserId(Integer.parseInt(id));
+        } else {
+            log.error("查询用户信息失败，其返回了空结构体");
+            return true;
+        }
+        return false;
+    }
+
+    /**
      *  组装帖子下的回复
      * @param postId 帖子ID
      */
@@ -51,7 +102,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                 .eq("post_id", postId);
         List<Reply> replies = replyDao.selectList(queryWrapper);
         QueryMapOfUserName queryMapOfUserName = new QueryMapOfUserName(userClient, replies);
-        Future<Map<String, String>> mapFuture = postTaskExecutor.submit(queryMapOfUserName);
+        Future<Optional<Map<String, String>>> mapFuture = postTaskExecutor.submit(queryMapOfUserName);
         // 找出所有帖子的直接回复
         List<ReplyVo> topReply = replies.stream().filter(reply -> reply.getParentId() == null).map(this::convertReplyToVo).collect(Collectors.toList());
         Map<Integer, List<ReplyVo>> parentId_subReplys = Maps.newHashMapWithExpectedSize(replies.size() - topReply.size());
@@ -75,15 +126,19 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
             log.error("countdownLatch等待组装回复时出错...");
             return null;
         }
-
         try {
-            Map<String, String> userIdToUserName = mapFuture.get();
-            for (ReplyVo top : topReply) {
-                // 默认值为用户的ID，这里修改默认值
-                top.setUserName(userIdToUserName.get(top.getUserName()));
-                for (ReplyVo sub : top.getSubReply()) {
-                    sub.setUserName(userIdToUserName.get(sub.getUserName()));
+            Optional<Map<String, String>> userIdToUserName = mapFuture.get();
+            if (userIdToUserName.isPresent()) {
+                Map<String, String> map = userIdToUserName.get();
+                for (ReplyVo top : topReply) {
+                    // 默认值为用户的ID，这里修改默认值
+                    top.setUserName(map.get(top.getUserName()));
+                    for (ReplyVo sub : top.getSubReply()) {
+                        sub.setUserName(map.get(sub.getUserName()));
+                    }
                 }
+            }else{
+                log.error("查询用户信息失败。返回的信息是空...");
             }
         } catch (InterruptedException | ExecutionException e) {
             log.error("查询用户信息出错...");
@@ -118,6 +173,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
         replyVo.setUserName(reply.getUserId().toString());
         return replyVo;
     }
+
 
     @Autowired
     public void setReplyDao(ReplyDao replyDao) {

@@ -13,12 +13,12 @@ import javax.validation.constraints.NotNull;
 public class ReplyPostDto {
 
     @NotNull
-    @Schema(name = "account", description = "账号/学号")
-    private String account;
+    @Schema(name = "userName", description = "账号/学号")
+    private String userName;
 
     @Schema(name = "content", description = "评论内容")
     @NotNull
-    private String content;
+    private String replyContent;
 
     @NotNull
     @Schema(name = "postId", description = "被评论的帖子的ID")

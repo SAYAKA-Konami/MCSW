@@ -8,7 +8,14 @@ public interface Constants {
 
     String POST_NOT_FOUND = "帖子不存在";
 
+    String POST_SUCCESS = "发帖成功";
+
+    String POST_FAILED = "发帖失败";
+
     String LIKE_SUCCESS = "点赞成功!";
 
     String server_error = "服务器被吃了T ^ T";
+
+    String REPLY_SUCCESS = "评论成功！";
+
 }

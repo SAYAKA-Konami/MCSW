@@ -1,16 +1,19 @@
 package mcsw.post.task;
 
+import cn.hutool.http.HttpStatus;
 import mcsw.post.client.UserClient;
 import mcsw.post.entity.Reply;
+import mscw.common.api.CommonResult;
 import mscw.common.domain.vo.UserVO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 
-public class QueryMapOfUserName implements Callable<Map<String, String>> {
+public class QueryMapOfUserName implements Callable<Optional<Map<String, String>>> {
     private UserClient userClient;
 
     private List<Reply> replyList;
@@ -21,9 +24,14 @@ public class QueryMapOfUserName implements Callable<Map<String, String>> {
     }
 
     @Override
-    public Map<String, String> call() throws Exception {
+    public Optional<Map<String, String>> call() throws Exception {
         List<Integer> collect = replyList.stream().distinct().map(Reply::getUserId).collect(Collectors.toList());
-        List<UserVO> data = userClient.getUserByIds(collect).getData();
-        return data.stream().collect(Collectors.toMap(UserVO::getId, UserVO::getName));
+        CommonResult<List<UserVO>> userByIds = userClient.getUserByIds(collect);
+        if (userByIds.getCode() == HttpStatus.HTTP_OK) {
+            List<UserVO> data =  userByIds.getData();
+            return Optional.of(data.stream().collect(Collectors.toMap(UserVO::getId, UserVO::getName)));
+        }else{
+            return Optional.empty();
+        }
     }
 }
