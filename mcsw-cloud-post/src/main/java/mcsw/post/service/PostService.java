@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.post.client.UserClient;
 import mcsw.post.dao.PostDao;
 import mcsw.post.entity.Post;
-import mcsw.post.model.dto.RequestLikePostDto;
+import mcsw.post.entity.Reply;
 import mcsw.post.model.dto.PostDto;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
@@ -26,10 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import static mcsw.post.config.Constants.*;
@@ -48,6 +51,8 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
     private RedisTemplate<Object, Object> redisTemplate;
     private ReplyService replyService;
     private ThreadPoolTaskExecutor postTaskExecutor;
+
+    private final ReentrantLock lock = new ReentrantLock();
 
 
     /**
@@ -93,31 +98,35 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
     }
 
     /**
-     *  点赞帖子...
-     *  该方案并不好。每次点赞都需要进行一次数据库的读写操作，对数据库造成一定的压力。
-     *  故先标识废弃
+     * 点赞帖子
      */
-    @Deprecated
-    @Transactional
-    public CommonResult<String> likePost(Map<String, String> header, RequestLikePostDto requestLikePostDto){
-        String userId = header.get("id");
-        // 如果已经点赞过了，那么直接返回。
-        // Redis中以帖子ID为Key，用户为一个集合
-        if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(requestLikePostDto.getPostId(), userId))) {
-            return CommonResult.failed(HAS_LIKED);
-        }
-        Post oldPost = postDao.selectOne(new QueryWrapper<Post>().select("id", "like").eq("id", requestLikePostDto.getPostId()));
-        if (oldPost == null) {
-            return CommonResult.failed(POST_NOT_FOUND);
-        }
-        int effect = postDao.likeIncrease(oldPost.getLike() + 1, oldPost.getId());
-        if (effect == 1){
-            // 记录到缓存中
-            redisTemplate.opsForSet().add(requestLikePostDto.getPostId(), userId);
-            return CommonResult.success(LIKE_SUCCESS);
+    public CommonResult<String> likePost(Map<String, String> header, Integer postId){
+        String key = POST_LIKE_KEY_PREFIX + postId;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))){
+            redisTemplate.opsForValue().increment(key);
         }else{
-            return CommonResult.failed(SERVER_ERROR);
+            lock.lock();
+            try {
+                if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+                    // 如果此时缓存已经存在。直接执行自增操作即可
+                    redisTemplate.opsForValue().increment(key);
+                    return CommonResult.success(LIKE_SUCCESS);
+                }
+                // 查不到到数据库中查
+                Post post = postDao.selectById(postId);
+                if (!Objects.isNull(post)) {
+                    redisTemplate.opsForValue().set(key, post.getLike() + 1);
+                }else{
+                    log.error("点赞评论出错。数据库中不存在该评论！");
+                    return CommonResult.failed(SERVER_ERROR);
+                }
+            }finally {
+                lock.unlock();
+            }
         }
+        // 将其添加到对应的点赞列表中
+        redisTemplate.opsForSet().add(REPLY_LIKE_KEY_PREFIX + postId, header.get("id"));
+        return CommonResult.success(LIKE_SUCCESS);
     }
 
     /**

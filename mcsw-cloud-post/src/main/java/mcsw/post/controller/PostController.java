@@ -58,8 +58,8 @@ public class PostController {
 
     @PostMapping("/likePost")
     @ApiOperation("点赞")
-    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody RequestLikePostDto requestLikePostDto){
-        return postService.likePost(header, requestLikePostDto);
+    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody RequestLikeDto requestLikeDto){
+        return managerService.like(header, requestLikeDto);
     }
 
     @PostMapping("/reply")
@@ -70,7 +70,7 @@ public class PostController {
 
     @PostMapping("/likeReply")
     @ApiOperation("评论点赞")
-    public CommonResult<String> likeReply(@RequestBody RequestLikeReplyDto likeReplyDto){
-        return replyService.likeReply(likeReplyDto);
+    public CommonResult<String> likeReply(@RequestHeader Map<String, String> header, @RequestBody RequestLikeDto requestLikeDto){
+        return managerService.like(header, requestLikeDto);
     }
 }

@@ -11,9 +11,9 @@ import mcsw.post.dao.ReplyDao;
 import mcsw.post.entity.Reply;
 import mcsw.post.model.dto.ReplyNestedDto;
 import mcsw.post.model.dto.ReplyPostDto;
-import mcsw.post.model.dto.RequestLikeReplyDto;
 import mcsw.post.model.dto.RequestReplyDto;
 import mcsw.post.task.QueryMapOfUserNameTask;
+import mscw.common.aop.EnableRequestHeader;
 import mscw.common.api.CommonResult;
 import mscw.common.domain.vo.ReplyVo;
 import mscw.common.domain.vo.UserVO;
@@ -26,7 +26,6 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.DelayQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
@@ -51,7 +50,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     @Resource
     private ThreadPoolTaskExecutor postTaskExecutor;
 
-    private RedisTemplate<String, Integer> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -63,8 +62,8 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
      *  点赞评论。
      * @apiNote 先Redis中的内容，然后定时任务更新数据库。
      */
-    public CommonResult<String> likeReply(RequestLikeReplyDto likeReplyDto){
-        String key = REPLY_LIKE_KEY_PREFIX + likeReplyDto.getReplyId();
+    public CommonResult<String> likeReply(Map<String, String> header, Integer replyId){
+        String key = REPLY_LIKE_KEY_PREFIX + replyId;
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))){
             redisTemplate.opsForValue().increment(key);
         }else{
@@ -76,10 +75,9 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                     return CommonResult.success(LIKE_SUCCESS);
                 }
                 // 查不到到数据库中查
-                Reply reply = replyDao.selectById(likeReplyDto.getReplyId());
+                Reply reply = replyDao.selectById(replyId);
                 if (!Objects.isNull(reply)) {
-                    // 一小时后过期
-                    redisTemplate.opsForValue().set(key, reply.getLike() + 1, Duration.ofHours(1));
+                    redisTemplate.opsForValue().set(key, reply.getLike() + 1);
                 }else{
                     log.error("点赞评论出错。数据库中不存在该评论！");
                     return CommonResult.failed(SERVER_ERROR);
@@ -88,6 +86,8 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
                 lock.unlock();
             }
         }
+        // 将其添加到对应的点赞列表中
+        redisTemplate.opsForSet().add(REPLY_LIKE_KEY_PREFIX + replyId, header.get("id"));
         return CommonResult.success(LIKE_SUCCESS);
     }
 
@@ -195,8 +195,8 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     private void synReplyLike(List<ReplyVo> topReply) {
         for (ReplyVo replyVo : topReply) {
             String key = REPLY_LIKE_KEY_PREFIX + replyVo.getId();
-            if (redisTemplate.hasKey(key)) {
-                replyVo.setLike(redisTemplate.opsForValue().get(key));
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+                replyVo.setLike((Integer) redisTemplate.opsForValue().get(key));
             }
             synReplyLike(replyVo.getSubReply());
         }
@@ -241,7 +241,7 @@ public class ReplyService extends ServiceImpl<ReplyDao, Reply> implements IServi
     }
 
     @Resource
-    public void setRedisTemplate(RedisTemplate<String, Integer> redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 }

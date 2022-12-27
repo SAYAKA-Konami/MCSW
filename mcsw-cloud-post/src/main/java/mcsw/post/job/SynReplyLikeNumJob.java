@@ -28,10 +28,10 @@ public class SynReplyLikeNumJob {
 
     /**
      *  每隔一小时同步一次
+     * @apiNote 采用 Cache Aside patten。先更新数据库再删除缓存。暂且不引入延迟双删
      */
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void synReplyLikeNum() {
-        log.info("同步评论点赞数开始");
         Set<String> keys = redisTemplate.keys(REPLY_LIKE_KEY_PREFIX.concat("*"));
         if (CollectionUtil.isEmpty(keys)) {
             log.info("没有需要同步的评论点赞数");
@@ -39,13 +39,15 @@ public class SynReplyLikeNumJob {
         }
         List<Map<String, Object>> listForUpdating = mapForUpdate(keys);
         replyDao.updateLikeNumBatch(listForUpdating);
-        log.info("同步评论点赞结束");
+        redisTemplate.delete(keys);
     }
 
 
+    /**
+     * @apiNote 采用 Cache Aside patten。先更新数据库再删除缓存。暂且不引入延迟双删
+     */
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void synPostLikeNum(){
-        log.info("同步帖子点赞数开始");
         Set<String> keys = redisTemplate.keys(POST_LIKE_KEY_PREFIX.concat("*"));
         if (CollectionUtil.isEmpty(keys)) {
             log.info("没有需要同步的帖子点赞数");
@@ -53,7 +55,7 @@ public class SynReplyLikeNumJob {
         }
         List<Map<String, Object>> listForUpdating = mapForUpdate(keys);
         postDao.updateLikeNumBatch(listForUpdating);
-        log.info("同步帖子点赞数完成");
+        redisTemplate.delete(keys);
     }
 
     /**

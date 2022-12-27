@@ -18,6 +18,8 @@ public interface Constants {
 
     String REPLY_SUCCESS = "评论成功！";
 
+    String WRONG_PARAM = "参数错误";
+
     /**
      *  评论点赞数前缀
      */
@@ -27,5 +29,15 @@ public interface Constants {
      *  帖子点赞数前缀
      */
     String POST_LIKE_KEY_PREFIX = "post_like_";
+    /**
+     *  点赞评论的用户列表的ID
+     */
+    String REPLY_LIKE_USER_LIST_KEY_PREFIX = "reply_like_list_";
+
+    /**
+     *  点赞帖子的用户列表的ID
+     */
+    String POST_LIKE_USER_LIST_KEY_PREFIX = "reply_like_list_";
+
 
 }
