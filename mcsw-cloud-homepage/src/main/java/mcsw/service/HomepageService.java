@@ -2,7 +2,7 @@ package mcsw.service;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import mcsw.model.SyncPostDto;
+import mcsw.model.dto.SyncPostDto;
 import mscw.common.domain.vo.PostVo;
 
 import java.util.List;

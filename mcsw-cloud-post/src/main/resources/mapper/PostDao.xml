@@ -13,6 +13,7 @@
         <result property="category" column="category" jdbcType="INTEGER"/>
     </resultMap>
 
+
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into mcsw.post(title, content, user_id, create_time, update_time, like, category)
@@ -29,7 +30,9 @@
             (#{entity.title}, #{entity.content}, #{entity.userId}, #{entity.createTime}, #{entity.updateTime}, #{entity.like}, #{entity.category})
         </foreach>
         on duplicate key update
-         title = values(title) , content = values(content) , user_id = values(user_id) , create_time = values(create_time) , update_time = values(update_time) , like = values(like) , category = values(category)     </insert>
+         title = values(title) , content = values(content) , user_id = values(user_id) , create_time = values(create_time) , update_time = values(update_time) , like = values(like) , category = values(category)
+    </insert>
+
 
 </mapper>
 

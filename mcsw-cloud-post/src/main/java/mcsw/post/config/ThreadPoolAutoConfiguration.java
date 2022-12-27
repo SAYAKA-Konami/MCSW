@@ -37,7 +37,7 @@ public class ThreadPoolAutoConfiguration {
 
             @Override
             public Thread newThread(Runnable runnable) {
-                return new Thread(runnable, "account-worker-" + nextThreadId.incrementAndGet());
+                return new Thread(runnable, "post-worker-" + nextThreadId.incrementAndGet());
             }
         });
         return executor;

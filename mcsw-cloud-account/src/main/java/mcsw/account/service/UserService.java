@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import mscw.common.aop.EnableRequestHeader;
 import mcsw.account.config.Constant;
@@ -30,10 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static mcsw.account.config.Constant.*;
 
@@ -136,6 +135,23 @@ public class UserService extends ServiceImpl<UserDao, User> implements IService<
                 .setDegreeCz(code_degreecz.get(user.getDegree())).setGenderCz(user.getGender() == 1 ? "男" : user.getGender() == 2 ? "女" : "未定义")
                 .setMajor(user.getMajor());
         return CommonResult.success(userVO);
+    }
+
+    /**
+     *  根据id获取用户信息
+     * @param ids ID列表
+     */
+    public CommonResult<List<UserVO>> getUsersByIds(List<Integer> ids){
+        QueryWrapper<User> wrapper = new QueryWrapper<User>()
+                .in("id", ids);
+        List<User> users = userDao.selectList(wrapper);
+        List<UserVO> userVOS = new ArrayList<>(users.size());
+        for (User user : users) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            buildCompleteUserVo(user, userVO);
+        }
+        return CommonResult.success(userVOS);
     }
 
     /**

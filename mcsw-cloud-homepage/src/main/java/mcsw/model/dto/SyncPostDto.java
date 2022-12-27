@@ -1,4 +1,4 @@
-package mcsw.model;
+package mcsw.model.dto;
 
 import lombok.Data;
 

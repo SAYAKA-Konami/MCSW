@@ -14,7 +14,6 @@
     </resultMap>
 
 
-
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into mcsw.reply(reply_content, user_id, post_id, create_time, update_time, 'like', parent_id)
