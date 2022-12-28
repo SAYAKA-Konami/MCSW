@@ -1,7 +1,7 @@
-package mcsw.client;
+package mcsw.homepage.client;
 
 import mscw.common.api.CommonResult;
-import mscw.common.domain.dto.RequestPage;
+import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.vo.PostVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +21,5 @@ public interface PostClient {
      * @apiNote 在未引入ElasticSearch之前，暂且将此任务交给Mysql。所以这里需要涉及到跨服务调用
      */
     @PostMapping("/homepage")
-    CommonResult<List<PostVo>> getHomePosts(@RequestBody RequestPage requestPage);
+    CommonResult<List<PostVo>> getHomePosts(@RequestBody QueryPosts queryPosts);
 }

@@ -1,10 +1,10 @@
-package mcsw.service;
+package mcsw.homepage.service;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import mcsw.model.dto.SyncPostDto;
+import mcsw.homepage.model.dto.SyncPostDto;
 import mscw.common.api.CommonResult;
-import mscw.common.domain.dto.RequestPage;
+import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.vo.PostVo;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public interface HomepageService {
     /**
      *  获取主页的帖子
      */
-    default CommonResult<IPage<PostVo>> getHomePagePosts(RequestPage requestPage){
+    default CommonResult<IPage<PostVo>> getHomePagePosts(QueryPosts queryPosts){
         return null;
     }
 
@@ -25,13 +25,7 @@ public interface HomepageService {
         return null;
     }
 
-    /**
-     *  按照类被查询
-     * @param category 0- work 1-cs 2 - master
-     */
-    default IPage<PostVo> homePageByCategory(int category){
-        return null;
-    }
+
 
     /**
      *  写入到Es中。如果后续有引入ElasticSearch的话...

@@ -10,6 +10,7 @@ import mcsw.post.dao.PostDao;
 import mcsw.post.entity.Post;
 import mcsw.post.model.bo.PostBo;
 import mcsw.post.model.dto.PostDto;
+import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
 import mscw.common.aop.EnableRequestHeader;
@@ -136,8 +137,8 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
      *  查询主页帖子
      * @apiNote 在ES引入前，暂且使用mysql来代替该功能
      */
-    public CommonResult<List<PostVo>> getHomePage(RequestPage requestPage){
-        List<PostBo> postBos = postDao.queryHomepage(requestPage.getCurrent(), requestPage.getSize());
+    public CommonResult<List<PostVo>> getHomePage(QueryPosts queryPosts){
+        List<PostBo> postBos = postDao.queryHomepage(queryPosts);
         List<PostVo> result = convertPostBoToVo(postBos);
         return CommonResult.success(result);
     }

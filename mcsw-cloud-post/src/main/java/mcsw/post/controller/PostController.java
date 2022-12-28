@@ -2,12 +2,14 @@ package mcsw.post.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import mcsw.post.manager.ManagerService;
 import mcsw.post.model.dto.*;
 import mcsw.post.service.PostService;
 import mcsw.post.service.ReplyService;
 import mscw.common.api.CommonResult;
+import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
 import mscw.common.domain.vo.PostWithReply;
@@ -77,7 +79,7 @@ public class PostController {
 
     @PostMapping("/homepage")
     @ApiOperation("获取主页帖子")
-    public CommonResult<List<PostVo>> getHomePosts(@RequestBody RequestPage requestPage){
-        return postService.getHomePage(requestPage);
+    public CommonResult<List<PostVo>> getHomePosts(@RequestBody QueryPosts queryPosts){
+        return postService.getHomePage(queryPosts);
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import mcsw.post.model.bo.PostBo;
+import mscw.common.domain.dto.QueryPosts;
 import org.apache.ibatis.annotations.*;
 import mcsw.post.entity.Post;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public interface PostDao extends BaseMapper<Post> {
     @Transactional
     void updateLikeNumBatch(@Param("entities")List<Map<String, Object>> entities);
 
-    List<PostBo> queryHomepage(@Param("offset") Long offset, @Param("rows") Long rows);
+    List<PostBo> queryHomepage(@Param("query")QueryPosts queryPosts);
 
     /**
      *  根据用户ID查询对应的帖子

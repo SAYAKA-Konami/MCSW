@@ -28,10 +28,20 @@
     <select id="queryHomepage" resultMap="fullInfoOfPost">
         SELECT post.*, SUM(post_id) AS reply_num
         FROM post, reply
-        WHERE post.id = reply.post_id
+        <where>
+            <if test="query.postId != null">
+                post.id = #{query.postId}
+            </if>
+            <if test="query.userId != null">
+                and post.user_id = #{query.userId}
+            </if>
+            <if test="query.category != -1">
+                and category = #{query.category}
+            </if>
+        </where>
         GROUP BY id
         ORDER BY 'like' DESC, reply_num DESC
-        limit #{offset}, #{row}
+        limit #{query.requestPage.current}, #{query.requestPage.size}
     </select>
 
     <select id="queryFullInfoOfPost" resultMap="fullInfoOfPost">
@@ -61,7 +71,7 @@
 
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.post(title, content, user_id, create_time, update_time, like, category)
+        insert into mcsw.post(title, content, user_id, create_time, update_time, 'like', category)
         values
         <foreach collection="entities" item="entity" separator=",">
         (#{entity.title}, #{entity.content}, #{entity.userId}, #{entity.createTime}, #{entity.updateTime}, #{entity.like}, #{entity.category})
@@ -69,13 +79,13 @@
     </insert>
     <!-- 批量插入或按主键更新 -->
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.post(title, content, user_id, create_time, update_time, like, category)
+        insert into mcsw.post(title, content, user_id, create_time, update_time, 'like', category)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.title}, #{entity.content}, #{entity.userId}, #{entity.createTime}, #{entity.updateTime}, #{entity.like}, #{entity.category})
         </foreach>
         on duplicate key update
-         title = values(title) , content = values(content) , user_id = values(user_id) , create_time = values(create_time) , update_time = values(update_time) , like = values(like) , category = values(category)
+         title = values(title) , content = values(content) , user_id = values(user_id) , create_time = values(create_time) , update_time = values(update_time) , 'like' = values(like) , category = values(category)
     </insert>
 
 

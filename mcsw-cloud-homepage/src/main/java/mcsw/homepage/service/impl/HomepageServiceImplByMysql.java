@@ -1,14 +1,14 @@
-package mcsw.service.impl;
+package mcsw.homepage.service.impl;
 
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import mcsw.client.PostClient;
-import mcsw.model.dto.SyncPostDto;
-import mcsw.service.HomepageService;
+import mcsw.homepage.client.PostClient;
+import mcsw.homepage.model.dto.SyncPostDto;
+import mcsw.homepage.service.HomepageService;
 import mscw.common.api.CommonResult;
-import mscw.common.domain.dto.RequestPage;
+import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +30,11 @@ public class HomepageServiceImplByMysql implements HomepageService {
 
 
     @Override
-    public CommonResult<IPage<PostVo>> getHomePagePosts(RequestPage requestPage) {
-        CommonResult<List<PostVo>> homePosts = postClient.getHomePosts(requestPage);
+    public CommonResult<IPage<PostVo>> getHomePagePosts(QueryPosts queryPosts) {
+        CommonResult<List<PostVo>> homePosts = postClient.getHomePosts(queryPosts);
         if (homePosts.getCode() == HttpStatus.HTTP_OK) {
             List<PostVo> data = homePosts.getData();
-            IPage<PostVo> page = Page.of(requestPage.getCurrent(), requestPage.getSize());
+            IPage<PostVo> page = Page.of(queryPosts.getRequestPage().getCurrent(), queryPosts.getRequestPage().getSize());
             page.setRecords(data);
             return CommonResult.success(page);
         }else{
@@ -47,15 +47,6 @@ public class HomepageServiceImplByMysql implements HomepageService {
         return HomepageService.super.searchPost(content);
     }
 
-    @Override
-    public IPage<PostVo> homePageByCategory(int category) {
-        return HomepageService.super.homePageByCategory(category);
-    }
-
-    @Override
-    public void synchronizeData(List<SyncPostDto> syncPostDtos) {
-        HomepageService.super.synchronizeData(syncPostDtos);
-    }
 
     @Autowired
     public void setPostClient(PostClient postClient) {
