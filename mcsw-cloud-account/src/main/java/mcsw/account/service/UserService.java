@@ -7,23 +7,22 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
-import mscw.common.aop.EnableRequestHeader;
 import mcsw.account.config.Constant;
 import mcsw.account.config.ValueFromNacos;
 import mcsw.account.dao.UserDao;
 import mcsw.account.entity.User;
 import mcsw.account.model.dto.UserDto;
-import mscw.common.domain.vo.AuthVO;
-import mscw.common.domain.vo.UserVO;
 import mcsw.account.util.CrawlerUtil;
 import mcsw.account.util.GetRSAPasswdUtil;
 import mcsw.account.util.JWTUtil;
 import mcsw.account.util.filter.HandleRegister;
+import mscw.common.aop.EnableRequestHeader;
 import mscw.common.api.CommonResult;
-import mscw.common.util.DictionaryOfUser;
+import mscw.common.domain.vo.AuthVO;
+import mscw.common.domain.vo.UserVO;
 import mscw.common.service.RedisService;
+import mscw.common.util.DictionaryOfUser;
 import mscw.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static mcsw.account.config.Constant.*;
 
@@ -116,7 +114,6 @@ public class UserService extends ServiceImpl<UserDao, User> implements IService<
         }
     }
 
-    @EnableRequestHeader
     public CommonResult<String> update(UserDto userDto){
         String account = userDto.getId();
         User user = new User();
