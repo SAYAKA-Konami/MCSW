@@ -13,6 +13,7 @@ import mscw.common.domain.vo.PostVo;
 import mscw.common.domain.vo.PostWithReply;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -72,5 +73,11 @@ public class PostController {
     @ApiOperation("评论点赞")
     public CommonResult<String> likeReply(@RequestHeader Map<String, String> header, @RequestBody RequestLikeDto requestLikeDto){
         return managerService.like(header, requestLikeDto);
+    }
+
+    @PostMapping("/homepage")
+    @ApiOperation("获取主页帖子")
+    public CommonResult<List<PostVo>> getHomePosts(@RequestBody RequestPage requestPage){
+        return postService.getHomePage(requestPage);
     }
 }

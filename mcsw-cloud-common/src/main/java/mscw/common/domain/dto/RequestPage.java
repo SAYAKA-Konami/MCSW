@@ -2,6 +2,7 @@ package mscw.common.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @ApiModel("分页参数")
+@AllArgsConstructor
 public class RequestPage {
 
 

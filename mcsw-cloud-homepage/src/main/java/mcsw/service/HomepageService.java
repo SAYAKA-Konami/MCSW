@@ -3,6 +3,8 @@ package mcsw.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import mcsw.model.dto.SyncPostDto;
+import mscw.common.api.CommonResult;
+import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
 
 import java.util.List;
@@ -11,7 +13,7 @@ public interface HomepageService {
     /**
      *  获取主页的帖子
      */
-    default IPage<PostVo> getHomePagePosts(){
+    default CommonResult<IPage<PostVo>> getHomePagePosts(RequestPage requestPage){
         return null;
     }
 

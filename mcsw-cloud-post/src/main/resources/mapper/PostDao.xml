@@ -13,6 +13,35 @@
         <result property="category" column="category" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="fullInfoOfPost" type="mcsw.post.model.bo.PostBo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="like" column="like" jdbcType="INTEGER"/>
+        <result property="category" column="category" jdbcType="INTEGER"/>
+        <result property="replyNum" column="reply_num" javaType="INTEGER"/>
+    </resultMap>
+
+    <select id="queryHomepage" resultMap="fullInfoOfPost">
+        SELECT post.*, SUM(post_id) AS reply_num
+        FROM post, reply
+        WHERE post.id = reply.post_id
+        GROUP BY id
+        ORDER BY 'like' DESC, reply_num DESC
+        limit #{offset}, #{row}
+    </select>
+
+    <select id="queryFullInfoOfPost" resultMap="fullInfoOfPost">
+        SELECT post.*, SUM(post_id) AS reply_num
+        FROM post, reply
+        WHERE post.id = reply.post_id and post.user_id = #{id}
+        GROUP BY id
+        ORDER BY 'like' DESC, reply_num DESC
+    </select>
+
     <update id="updateLikeNumBatch">
         update post
         <trim prefix="set" suffixOverrides=",">

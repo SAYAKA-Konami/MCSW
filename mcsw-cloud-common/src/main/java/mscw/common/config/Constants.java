@@ -6,6 +6,10 @@ public interface Constants {
      */
     String SECRET_KEY = "SAYAKA";
 
+    String WRONG_PARAM = "参数错误";
+
+
+    String SERVER_ERROR = "服务器被吃了T ^ T";
 
 
 }

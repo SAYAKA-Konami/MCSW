@@ -1,7 +1,6 @@
 package mcsw.post.service;
 
 import cn.hutool.core.collection.ListUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -9,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.post.client.UserClient;
 import mcsw.post.dao.PostDao;
 import mcsw.post.entity.Post;
-import mcsw.post.entity.Reply;
+import mcsw.post.model.bo.PostBo;
 import mcsw.post.model.dto.PostDto;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
@@ -23,14 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -72,9 +66,8 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
     @EnableRequestHeader
     public CommonResult<IPage<PostVo>> getUserPosts(Map<String, String> header, RequestPage requestPage){
         int id = Integer.parseInt(header.get("id"));
-        // 帖子表中的用户ID需要加索引...NOT YET ONLINE
-        List<Post> posts = postDao.selectAllByUserId(id);
-        List<PostVo> postVos = statisticsReplyNumAndConvertIntoPostVo(posts);
+        List<PostBo> postBos = postDao.queryFullInfoOfPost(id);
+        List<PostVo> postVos = convertPostBoToVo(postBos);
         IPage<PostVo> page = Page.of(requestPage.getCurrent(), requestPage.getSize());
         page.setRecords(postVos);
         return CommonResult.success(page);
@@ -90,8 +83,9 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
         if (userInfo.getCode() != ResultCode.SUCCESS.getCode()) {
             return CommonResult.failed(USER_NOT_FOUND);
         }
-        List<Post> posts = postDao.selectAllByUserId(Integer.parseInt(userInfo.getData().getId()));
-        List<PostVo> postVos = statisticsReplyNumAndConvertIntoPostVo(posts);
+        int userId = Integer.parseInt(userInfo.getData().getId());
+        List<PostBo> postBos = postDao.queryFullInfoOfPost(userId);
+        List<PostVo> postVos = convertPostBoToVo(postBos);
         IPage<PostVo> page = Page.of(requestPage.getCurrent(), requestPage.getSize());
         page.setRecords(postVos);
         return CommonResult.success(page);
@@ -138,6 +132,27 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
         return statisticsReplyNumAndConvertIntoPostVo(of).get(0);
     }
 
+    /**
+     *  查询主页帖子
+     * @apiNote 在ES引入前，暂且使用mysql来代替该功能
+     */
+    public CommonResult<List<PostVo>> getHomePage(RequestPage requestPage){
+        List<PostBo> postBos = postDao.queryHomepage(requestPage.getCurrent(), requestPage.getSize());
+        List<PostVo> result = convertPostBoToVo(postBos);
+        return CommonResult.success(result);
+    }
+
+    @NotNull
+    private static List<PostVo> convertPostBoToVo(List<PostBo> postBos) {
+        List<PostVo> result = new ArrayList<>(postBos.size());
+        for (PostBo postBo : postBos) {
+            PostVo postVo = new PostVo();
+            BeanUtils.copyProperties(postBo, postVo);
+            result.add(postVo);
+        }
+        return result;
+    }
+
 
     /**
      *  统计帖子的评论数并转换为PostVo
@@ -145,6 +160,7 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
      * @param posts 帖子
      */
     @NotNull
+    @Deprecated
     private List<PostVo> statisticsReplyNumAndConvertIntoPostVo(List<Post> posts) {
         List<Integer> postIds = posts.stream().map(Post::getId).collect(Collectors.toList());
         // 为啥这里需要并发执行？因为每个帖子的回复都是各自独立的。所以需要分别统计。感觉这里设计得似乎有些不合理...
