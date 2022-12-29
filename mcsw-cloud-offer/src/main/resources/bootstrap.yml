@@ -24,6 +24,9 @@ spring:
           # 扩展配置文件
           data-id: datasource.yml
           refresh: true
+        extension-configs[1]:
+          data-id: system.yml
+          refresh: true
 
 
       #注册中心
