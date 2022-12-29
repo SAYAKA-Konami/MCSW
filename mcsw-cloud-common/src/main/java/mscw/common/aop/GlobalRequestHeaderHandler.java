@@ -31,6 +31,10 @@ public class GlobalRequestHeaderHandler {
 
     @Pointcut("@annotation(mscw.common.aop.EnableRequestHeader)")
     public void cut(){}
+
+    @Pointcut("@annotation(mscw.common.aop.UserMajor)")
+    public void major(){}
+
     @Pointcut("args(java.util.Map,..)")
     public void firstArgIsHeader(){}
 
@@ -45,6 +49,13 @@ public class GlobalRequestHeaderHandler {
         if (StringUtils.isNotEmpty(degree)) {
             header.put("degree", degree);
         }
+        Optional.ofNullable(redisServiceImpl.get(header.get("id") + SUFFIX_MAJOR))
+                .ifPresent(major -> header.put("major", major.toString()));
+    }
+
+    @Before("firstArgIsHeader() && major()")
+    public void addMajor(JoinPoint joinPoint){
+        Map<String, String> header = (Map<String, String>)joinPoint.getArgs()[0];
         Optional.ofNullable(redisServiceImpl.get(header.get("id") + SUFFIX_MAJOR))
                 .ifPresent(major -> header.put("major", major.toString()));
     }

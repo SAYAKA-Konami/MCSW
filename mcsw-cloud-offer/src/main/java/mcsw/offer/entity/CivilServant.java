@@ -30,6 +30,10 @@ public class CivilServant implements Serializable {
 
     private Integer userId;
     /**
+     * 专业
+     */
+    private String major;
+    /**
      * 岗位名称。可以不填。
      */
     private String positionName;
@@ -37,6 +41,12 @@ public class CivilServant implements Serializable {
      * 薪酬，选填
      */
     private String salary;
+
+    /**
+     * 备注
+     */
+    private String remarks;
+
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

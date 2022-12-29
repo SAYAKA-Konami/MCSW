@@ -55,9 +55,18 @@ public class Offer implements Serializable {
     private String remarks;
 
     /**
+     *  专业
+     */
+    private String major;
+
+    /**
      * 发布人的ID
      */
     private Integer userId;
+    /**
+     * 岗位名称
+     */
+    private String positionName;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

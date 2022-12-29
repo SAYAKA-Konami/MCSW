@@ -25,9 +25,12 @@ public class Master {
 
     private Integer college;
     //目标学校
-    private String target;
+    private String university;
     //目标专业
-    private String major;
+    private String masterMajor;
+    private String bachelorMajor;
+    // 考研专业课代码
+    private Integer code;
     //0-考研 1-保研
     private Integer type;
     //考研总分

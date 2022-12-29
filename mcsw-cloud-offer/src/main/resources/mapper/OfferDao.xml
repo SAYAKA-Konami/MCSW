@@ -15,185 +15,27 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="positionName" column="position_name" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="OfferMap">
-        select
-          id, company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id
-        from offer
-        where id = #{id}
-    </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="OfferMap">
-        select
-          id, company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id
-        from offer
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="company != null and company != ''">
-                and company = #{company}
-            </if>
-            <if test="city != null and city != ''">
-                and city = #{city}
-            </if>
-            <if test="salary != null and salary != ''">
-                and salary = #{salary}
-            </if>
-            <if test="type != null">
-                and type = #{type}
-            </if>
-            <if test="education != null and education != ''">
-                and education = #{education}
-            </if>
-            <if test="industry != null">
-                and industry = #{industry}
-            </if>
-            <if test="college != null">
-                and college = #{college}
-            </if>
-            <if test="remarks != null and remarks != ''">
-                and remarks = #{remarks}
-            </if>
-            <if test="createTime != null">
-                and create_time = #{createTime}
-            </if>
-            <if test="updateTime != null">
-                and update_time = #{updateTime}
-            </if>
-            <if test="userId != null">
-                and user_id = #{userId}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from offer
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="company != null and company != ''">
-                and company = #{company}
-            </if>
-            <if test="city != null and city != ''">
-                and city = #{city}
-            </if>
-            <if test="salary != null and salary != ''">
-                and salary = #{salary}
-            </if>
-            <if test="type != null">
-                and type = #{type}
-            </if>
-            <if test="education != null and education != ''">
-                and education = #{education}
-            </if>
-            <if test="industry != null">
-                and industry = #{industry}
-            </if>
-            <if test="college != null">
-                and college = #{college}
-            </if>
-            <if test="remarks != null and remarks != ''">
-                and remarks = #{remarks}
-            </if>
-            <if test="createTime != null">
-                and create_time = #{createTime}
-            </if>
-            <if test="updateTime != null">
-                and update_time = #{updateTime}
-            </if>
-            <if test="userId != null">
-                and user_id = #{userId}
-            </if>
-        </where>
-    </select>
-
-    <!--新增所有列-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into offer(company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id)
-        values (#{company}, #{city}, #{salary}, #{type}, #{education}, #{industry}, #{college}, #{remarks}, #{createTime}, #{updateTime}, #{userId})
-    </insert>
-
+    <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into offer(company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id)
+        insert into mcsw.offer(company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id, major, position_name)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.company}, #{entity.city}, #{entity.salary}, #{entity.type}, #{entity.education}, #{entity.industry}, #{entity.college}, #{entity.remarks}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId})
+        (#{entity.company}, #{entity.city}, #{entity.salary}, #{entity.type}, #{entity.education}, #{entity.industry}, #{entity.college}, #{entity.remarks}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId}, #{entity.major}, #{entity.positionName})
         </foreach>
     </insert>
-
+    <!-- 批量插入或按主键更新 -->
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into offer(company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id)
+        insert into mcsw.offer(company, city, salary, type, education, industry, college, remarks, create_time, update_time, user_id, major, position_name)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.company}, #{entity.city}, #{entity.salary}, #{entity.type}, #{entity.education}, #{entity.industry}, #{entity.college}, #{entity.remarks}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId})
+            (#{entity.company}, #{entity.city}, #{entity.salary}, #{entity.type}, #{entity.education}, #{entity.industry}, #{entity.college}, #{entity.remarks}, #{entity.createTime}, #{entity.updateTime}, #{entity.userId}, #{entity.major}, #{entity.positionName})
         </foreach>
         on duplicate key update
-        company = values(company),
-        city = values(city),
-        salary = values(salary),
-        type = values(type),
-        education = values(education),
-        industry = values(industry),
-        college = values(college),
-        remarks = values(remarks),
-        create_time = values(create_time),
-        update_time = values(update_time),
-        user_id = values(user_id)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update offer
-        <set>
-            <if test="company != null and company != ''">
-                company = #{company},
-            </if>
-            <if test="city != null and city != ''">
-                city = #{city},
-            </if>
-            <if test="salary != null and salary != ''">
-                salary = #{salary},
-            </if>
-            <if test="type != null">
-                type = #{type},
-            </if>
-            <if test="education != null and education != ''">
-                education = #{education},
-            </if>
-            <if test="industry != null">
-                industry = #{industry},
-            </if>
-            <if test="college != null">
-                college = #{college},
-            </if>
-            <if test="remarks != null and remarks != ''">
-                remarks = #{remarks},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime},
-            </if>
-            <if test="userId != null">
-                user_id = #{userId},
-            </if>
-        </set>
-        where id = #{id}
-    </update>
-
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from offer where id = #{id}
-    </delete>
+         company = values(company) , city = values(city) , salary = values(salary) , type = values(type) , education = values(education) , industry = values(industry) , college = values(college) , remarks = values(remarks) , create_time = values(create_time) , update_time = values(update_time) , user_id = values(user_id) , major = values(major) , position_name = values(position_name)     </insert>
 
 </mapper>
 
