@@ -1,9 +1,9 @@
-package mcsw.offer.service.extend.startegy;
+package mcsw.offer.service.extend.startegy.flaunt;
 
-import mcsw.offer.entity.CivilServant;
-import mcsw.offer.model.dto.RequestCsDto;
+import mcsw.offer.entity.Master;
+import mcsw.offer.model.dto.RequestMasterDto;
 import mcsw.offer.model.dto.RequestShowOffDto;
-import mcsw.offer.service.CivilServantService;
+import mcsw.offer.service.MasterService;
 import mscw.common.api.CommonResult;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +14,25 @@ import static mcsw.offer.config.Constant.POST_FAIL;
 import static mcsw.offer.config.Constant.POST_SUCCESS;
 
 @Component
-public class CsStrategy implements FlauntStrategy {
+public class MaterStrategy implements FlauntStrategy {
 
     @Resource
-    private CivilServantService civilServantService;
+    private MasterService masterService;
+
     @Override
     public CommonResult<String> flaunt(Map<String, String> header, RequestShowOffDto requestShowOffDto) {
         int userId = Integer.parseInt(header.get("id"));
         Integer college = Integer.parseInt(header.get("college"));
         String major = header.get("major");
-        CivilServant civilServant = new CivilServant();
-        RequestCsDto csDto = requestShowOffDto.getCsDto();
-        civilServant.setUserId(userId).setCollege(college).setMajor(major)
+        RequestMasterDto masterDto = requestShowOffDto.getMasterDto();
+        Master master = new Master();
+        master.setUserId(userId).setCollege(college).setBachelorMajor(major)
                 .setRemarks(requestShowOffDto.getRemarks())
-                .setCity(csDto.getCity())
-                .setSalary(csDto.getSalary())
-                .setPositionName(csDto.getPositionName());
-        boolean save = civilServantService.save(civilServant);
+                .setScore(masterDto.getScore())
+                .setUniversity(masterDto.getUniversity())
+                .setMasterMajor(masterDto.getMasterMajor())
+                .setType(masterDto.getType());
+        boolean save = masterService.save(master);
         if (save) {
             return CommonResult.success(POST_SUCCESS);
         } else {
@@ -40,6 +42,6 @@ public class CsStrategy implements FlauntStrategy {
 
     @Override
     public int getCategory() {
-        return Category.CIVIL_SERVANT.getTag();
+        return Category.MASTER.getTag();
     }
 }

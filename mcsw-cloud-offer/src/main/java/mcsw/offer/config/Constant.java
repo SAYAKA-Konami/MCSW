@@ -18,4 +18,7 @@ public interface Constant {
 
     String POST_FAIL = "发送失败";
 
+    String WATCH_COUNT_KEY = "offer_read";
+
+
 }

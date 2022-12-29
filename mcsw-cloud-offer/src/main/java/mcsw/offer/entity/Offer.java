@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Offer implements Serializable {
+public class Offer implements Serializable, GetId {
     private static final long serialVersionUID = 325258889077296440L;
 
     @TableId(type = IdType.AUTO)

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.offer.dao.CivilServantDao;
 import mcsw.offer.entity.CivilServant;
+import mcsw.offer.model.vo.MixBrowserVo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +14,12 @@ import org.springframework.stereotype.Service;
  * @since 2022-12-29 14:35:24
  */
 @Service
-public class CivilServantService extends ServiceImpl<CivilServantDao, CivilServant> implements IService<CivilServant> {
+public class CivilServantService extends ServiceImpl<CivilServantDao, CivilServant> implements IService<CivilServant>, Common<CivilServant> {
 
+    // TODO
+    @Override
+    public MixBrowserVo convertToMixBrowserVo(CivilServant civilServant) {
+        return null;
+    }
 }
 

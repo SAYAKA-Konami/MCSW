@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.offer.dao.CommentDao;
 import mcsw.offer.entity.Comment;
+import mscw.common.api.CommonResult;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommentService extends ServiceImpl<CommentDao, Comment> implements IService<Comment> {
+
+    //TODO:完善评论功能
+    public CommonResult<String> comment(){
+        return CommonResult.success("comment");
+    }
 
 }
 

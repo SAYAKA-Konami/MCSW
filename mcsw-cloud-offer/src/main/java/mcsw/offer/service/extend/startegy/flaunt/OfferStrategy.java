@@ -1,4 +1,4 @@
-package mcsw.offer.service.extend.startegy;
+package mcsw.offer.service.extend.startegy.flaunt;
 
 import mcsw.offer.entity.Offer;
 import mcsw.offer.model.dto.RequestOfferDto;

@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Master {
+public class Master implements GetId {
 
     @TableId(type = IdType.AUTO)
     private Integer id;

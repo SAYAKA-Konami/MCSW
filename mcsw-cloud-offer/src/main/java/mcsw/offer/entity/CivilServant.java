@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CivilServant implements Serializable {
+public class CivilServant implements Serializable, GetId {
     private static final long serialVersionUID = 257575043981420589L;
 
     @TableId(type = IdType.AUTO)
