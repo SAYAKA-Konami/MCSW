@@ -14,6 +14,7 @@
         <module>mcsw-cloud-gateway</module>
         <module>mcsw-cloud-post</module>
         <module>mcsw-cloud-homepage</module>
+        <module>mcsw-cloud-offer</module>
     </modules>
 
     <properties>

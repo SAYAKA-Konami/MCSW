@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mcsw.offer.dao.CivilServantDao">
+
+    <resultMap type="mcsw.offer.entity.CivilServant" id="CivilServantMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="college" column="college" jdbcType="INTEGER"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="positionName" column="position_name" jdbcType="VARCHAR"/>
+        <result property="salary" column="salary" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mcsw.civil_servant(college, city, user_id, position_name, salary, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.college}, #{entity.city}, #{entity.userId}, #{entity.positionName}, #{entity.salary},
+            #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into mcsw.civil_servant(college, city, user_id, position_name, salary, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.college}, #{entity.city}, #{entity.userId}, #{entity.positionName}, #{entity.salary},
+            #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        college = values(college) , city = values(city) , user_id = values(user_id) , position_name =
+        values(position_name) , salary = values(salary) , create_time = values(create_time) , update_time =
+        values(update_time)
+    </insert>
+
+</mapper>
+
