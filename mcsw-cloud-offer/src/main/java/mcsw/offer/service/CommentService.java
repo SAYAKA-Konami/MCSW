@@ -9,10 +9,13 @@ import mcsw.offer.client.UserClient;
 import mcsw.offer.dao.CommentDao;
 import mcsw.offer.entity.Comment;
 import mcsw.offer.model.dto.QueryOfferDto;
+import mcsw.offer.model.dto.RequestCommentDto;
 import mcsw.offer.model.vo.CommentVo;
 import mcsw.offer.service.extend.startegy.flaunt.FlauntStrategy;
 import mscw.common.api.CommonResult;
 import mscw.common.domain.vo.UserVO;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static mscw.common.config.Constants.SERVER_ERROR;
 
 /**
  * (Comment)表服务实现类
@@ -46,14 +51,31 @@ public class CommentService extends ServiceImpl<CommentDao, Comment> implements 
     private  static final String CIVIL_SERVANT_SUFFIX = "c";
 
 
-    //TODO:完善评论功能
-    public CommonResult<String> comment(){
-        return CommonResult.success("comment");
+    public CommonResult<String> comment(Map<String, String> header, RequestCommentDto commentDto){
+        Comment comment = new Comment();
+        int userId = Integer.parseInt(header.get("id"));
+        comment.setUserId(userId).setContent(commentDto.getContent()).setParentId(commentDto.getParentId());
+        Integer type = commentDto.getType();
+        String mcswId = generateMcswId(commentDto.getOfferId(), commentDto.getType());
+        comment.setMcswId(mcswId);
+        boolean save = this.save(comment);
+        if (save) {
+            return CommonResult.success("操作成功");
+        }else{
+            return CommonResult.failed(SERVER_ERROR);
+        }
     }
 
     public List<CommentVo> getCommentFacade(QueryOfferDto queryOfferDto){
         Integer category = queryOfferDto.getCategory();
-        String mcswId = queryOfferDto.getId().toString();
+        String mcswId = generateMcswId(queryOfferDto.getId(), category);
+        Optional<List<CommentVo>> commentsForOne = getCommentsForOne(mcswId);
+        return commentsForOne.orElse(null);
+    }
+
+    @Nullable
+    private static String generateMcswId(Integer id, Integer category) {
+        String mcswId = id.toString();
         switch (category) {
             case 0:
                 mcswId = mcswId.concat(OFFER_SUFFIX);
@@ -67,8 +89,7 @@ public class CommentService extends ServiceImpl<CommentDao, Comment> implements 
             default:
                 mcswId = null;
         }
-        Optional<List<CommentVo>> commentsForOne = getCommentsForOne(mcswId);
-        return commentsForOne.orElse(null);
+        return mcswId;
     }
 
     /**

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/homepage")
@@ -25,7 +26,7 @@ public class HomepageController {
 
     @PostMapping("/home")
     @ApiOperation("查询首页帖子。可根据不同的板块更改相应的参数。")
-    public CommonResult<IPage<PostVo>> getHomePage(@RequestBody QueryPosts queryPosts){
+    public CommonResult<IPage<PostVo>> getHomePage(@RequestBody @Valid QueryPosts queryPosts){
         return homepageService.getHomePagePosts(queryPosts);
     }
 }

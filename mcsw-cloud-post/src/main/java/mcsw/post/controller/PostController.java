@@ -15,6 +15,7 @@ import mscw.common.domain.vo.PostVo;
 import mscw.common.domain.vo.PostWithReply;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -37,49 +38,49 @@ public class PostController {
 
     @PostMapping("/fullInfo")
     @ApiOperation(value = "获取帖子内容")
-    public CommonResult<PostWithReply> getFullInfoOfPost(@RequestBody RequestPostInfoDto requestPostInfoDto){
+    public CommonResult<PostWithReply> getFullInfoOfPost(@RequestBody @Valid RequestPostInfoDto requestPostInfoDto){
         return managerService.getFullInfoOfPost(requestPostInfoDto.getPostId());
     }
 
     @PostMapping("/post")
     @ApiOperation("发帖")
-    public CommonResult insertNewPost(@RequestBody PostDto postDto){
+    public CommonResult insertNewPost(@RequestBody @Valid PostDto postDto){
         return CommonResult.success(postService.insertNewPost(postDto));
     }
 
     @PostMapping("/getUserPosts")
     @ApiOperation("获取登录用户的帖子")
-    public CommonResult<IPage<PostVo>> getUserPosts(@RequestHeader Map<String, String> header, @RequestBody RequestPage requestPage){
+    public CommonResult<IPage<PostVo>> getUserPosts(@RequestHeader Map<String, String> header, @RequestBody @Valid RequestPage requestPage){
         return postService.getUserPosts(header, requestPage);
     }
 
     @PostMapping("/getPostsByUserName")
     @ApiOperation("获取指定用户的帖子")
-    public CommonResult<IPage<PostVo>> getSpecifyUserPosts(@RequestBody RequestPostByUserNameDto requestPostByUserNameDto){
+    public CommonResult<IPage<PostVo>> getSpecifyUserPosts(@RequestBody @Valid RequestPostByUserNameDto requestPostByUserNameDto){
         return postService.getSpecifyUserPosts(requestPostByUserNameDto.getName(), requestPostByUserNameDto.getRequestPage());
     }
 
     @PostMapping("/likePost")
     @ApiOperation("点赞")
-    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody RequestLikeDto requestLikeDto){
+    public CommonResult<String> likePost(@RequestHeader Map<String, String> header, @RequestBody @Valid RequestLikeDto requestLikeDto){
         return managerService.like(header, requestLikeDto);
     }
 
     @PostMapping("/reply")
     @ApiOperation("评论")
-    public CommonResult<String> reply(@RequestBody RequestReplyDto requestReplyDto){
+    public CommonResult<String> reply(@RequestBody @Valid RequestReplyDto requestReplyDto){
         return replyService.reply(requestReplyDto);
     }
 
     @PostMapping("/likeReply")
     @ApiOperation("评论点赞")
-    public CommonResult<String> likeReply(@RequestHeader Map<String, String> header, @RequestBody RequestLikeDto requestLikeDto){
+    public CommonResult<String> likeReply(@RequestHeader Map<String, String> header, @RequestBody @Valid RequestLikeDto requestLikeDto){
         return managerService.like(header, requestLikeDto);
     }
 
     @PostMapping("/homepage")
     @ApiOperation("获取主页帖子")
-    public CommonResult<List<PostVo>> getHomePosts(@RequestBody QueryPosts queryPosts){
+    public CommonResult<List<PostVo>> getHomePosts(@RequestBody @Valid QueryPosts queryPosts){
         return postService.getHomePage(queryPosts);
     }
 }

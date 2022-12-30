@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +32,19 @@ public class AccountController {
 
     @ApiOperation(value = "注册", httpMethod = "POST")
     @PostMapping("/register")
-    public CommonResult<String> register(@RequestBody UserDto userDto){
+    public CommonResult<String> register(@RequestBody @Valid UserDto userDto){
         return userService.register(userDto);
     }
 
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping("/login")
-    public CommonResult<AuthVO> login(@RequestBody UserLoginDto userLoginDto){
+    public CommonResult<AuthVO> login(@RequestBody @Valid UserLoginDto userLoginDto){
         return userService.login(userLoginDto.getId(), userLoginDto.getPasswd());
     }
 
     @ApiOperation(value = "修改", httpMethod = "POST")
     @PostMapping("/update")
-    public CommonResult<String> update(@RequestBody UserDto userDto){
+    public CommonResult<String> update(@RequestBody @Valid UserDto userDto){
         return userService.update(userDto);
     }
 
@@ -55,7 +56,7 @@ public class AccountController {
 
     @ApiOperation(value = "获取用户信息")
     @PostMapping("/getUsersByIds")
-    public CommonResult<List<UserVO>> getUsersByIds(@RequestBody Collection<Integer> ids){
+    public CommonResult<List<UserVO>> getUsersByIds(@RequestBody @Valid Collection<Integer> ids){
         return userService.getUsersByIds(ids);
     }
 
