@@ -49,5 +49,10 @@ public class OfferService extends ServiceImpl<OfferDao, Offer> implements IServi
                 .userId(offer.getUserId())
                 .build();
     }
+
+    @Override
+    public int getCategory() {
+        return FlauntStrategy.Category.OFFER.getTag();
+    }
 }
 

@@ -19,18 +19,25 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static mcsw.offer.config.Constant.WATCH_COUNT_KEY;
-
+/**
+ * @apiNote 由于该项目的前端也由本人负责。所以为了降低到时候开发前端心智负担。我把offer页面返回的结果都抽象成一个类。该类借鉴于 offershow 的样式。{@link MixBrowserVo}
+ *          包含主标题（左标题）、右标题、副标题、备注、浏览人数、发布时间、本科/硕士的标签。
+ *          在设计数据库表时为了不做冗余所以我分别为三种情况设计了三张表。但在实现该功能时三个实体类的区别只是如何转化成统一的VO类。所以我设计了一个{@link Common}的接口将此抽象出来。
+ * @see GetId 该接口的缘由是因为在 <method>get</method>中我需要按照实体类ID来生成一个map。
+ * @author wu nan
+ * @since  2022/12/30
+ **/
 @Slf4j
-public class GetMixBrowser<T extends GetId, U extends Common<T>> {
+public class GetMixBrowser<T extends GetId> {
     private final UserClient userClient;
 
     private final ThreadPoolTaskExecutor offerTaskExecutor;
 
     private final StringRedisTemplate redisTemplate;
 
-    private final U service;
+    private final Common<T> service;
 
-    public GetMixBrowser(UserClient userClient, ThreadPoolTaskExecutor offerTaskExecutor, StringRedisTemplate redisTemplate, U service) {
+    public GetMixBrowser(UserClient userClient, ThreadPoolTaskExecutor offerTaskExecutor, StringRedisTemplate redisTemplate, Common<T> service) {
         this.userClient = userClient;
         this.offerTaskExecutor = offerTaskExecutor;
         this.redisTemplate = redisTemplate;

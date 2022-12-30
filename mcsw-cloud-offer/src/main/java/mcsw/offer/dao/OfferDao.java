@@ -3,6 +3,7 @@ package mcsw.offer.dao;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import mcsw.offer.entity.Offer;
 
@@ -12,6 +13,7 @@ import mcsw.offer.entity.Offer;
  * @author Nan
  * @since 2022-12-29 14:23:31
  */
+@Mapper
 public interface OfferDao extends BaseMapper<Offer> {
 
     /**

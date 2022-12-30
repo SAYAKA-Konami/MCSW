@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class AccountController {
 
     @ApiOperation(value = "获取用户信息")
     @PostMapping("/getUsersByIds")
-    public CommonResult<List<UserVO>> getUsersByIds(@RequestBody List<Integer> ids){
+    public CommonResult<List<UserVO>> getUsersByIds(@RequestBody Collection<Integer> ids){
         return userService.getUsersByIds(ids);
     }
 

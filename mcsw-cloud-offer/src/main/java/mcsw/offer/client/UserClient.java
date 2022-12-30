@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,5 +23,5 @@ public interface UserClient {
     CommonResult<UserVO> getUserInfo(@RequestParam("name") String name);
 
     @PostMapping("/getUsersByIds")
-    CommonResult<List<UserVO>> getUserByIds(@RequestBody List<Integer> ids);
+    CommonResult<List<UserVO>> getUserByIds(@RequestBody Collection<Integer> ids);
 }

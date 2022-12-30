@@ -138,7 +138,7 @@ public class UserService extends ServiceImpl<UserDao, User> implements IService<
      *  根据id获取用户信息
      * @param ids ID列表
      */
-    public CommonResult<List<UserVO>> getUsersByIds(List<Integer> ids){
+    public CommonResult<List<UserVO>> getUsersByIds(Collection<Integer> ids){
         QueryWrapper<User> wrapper = new QueryWrapper<User>()
                 .in("id", ids);
         List<User> users = userDao.selectList(wrapper);

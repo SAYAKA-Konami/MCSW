@@ -1,5 +1,6 @@
 package mscw.common.util;
 
+import io.swagger.models.auth.In;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -18,15 +19,18 @@ public class DictionaryOfUser {
      */
     @Getter
     private static Map<Integer, String> code2collegeName = new HashMap<>();
-
     @Getter
     private static Map<String, Integer> collegeName_code = new HashMap<>();
 
     @Getter
     private static Map<String, Integer> DEGREECZ_CODE = new HashMap<>();
-
     @Getter
     private static Map<Integer, String> CODE_DEGREECZ = new HashMap<>();
+
+    @Getter
+    private static Map<Integer, String> CODE_INDUSTRY = new HashMap<>();
+    @Getter
+    private static Map<String, Integer> INDUSTRY_CODE = new HashMap<>();
 
     static {
         CollegeNameToCode[] values = CollegeNameToCode.values();
@@ -34,10 +38,17 @@ public class DictionaryOfUser {
             collegeName_code.put(value.getCollege(), value.getCode());
             code2collegeName.put(value.getCode(), value.getCollege());
         }
+
         Degree[] degrees = Degree.values();
         for (Degree value : degrees) {
             DEGREECZ_CODE.put(value.getName(), value.getCode());
             CODE_DEGREECZ.put(value.getCode(), value.getName());
+        }
+
+        Industry[] industries = Industry.values();
+        for (Industry industry : industries) {
+            INDUSTRY_CODE.put(industry.getIndustry(), industry.getCode());
+            CODE_INDUSTRY.put(industry.getCode(), industry.getIndustry());
         }
     }
     public enum Degree{
@@ -98,6 +109,32 @@ public class DictionaryOfUser {
             case 0: return "男";
             case 1: return "女";
             default: return "未定义";
+        }
+    }
+
+    public enum Industry{
+        IT("IT|互联网|通信", 0),
+        FINANCE("金融", 1),
+        PURCHASE_TRADE_TRANSPORTATION_LOGISTICS("采购|贸易|交通|物流", 2),
+        MANUFACTURING("生产|制造",3),
+
+        OTHER("其他", 4);
+
+        private String industry;
+
+        private Integer code;
+
+        Industry(String industry, Integer code) {
+            this.industry = industry;
+            this.code = code;
+        }
+
+        public String getIndustry() {
+            return industry;
+        }
+
+        public Integer getCode() {
+            return code;
         }
     }
 

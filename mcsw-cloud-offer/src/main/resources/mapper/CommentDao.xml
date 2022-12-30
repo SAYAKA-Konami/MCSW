@@ -4,9 +4,7 @@
 
     <resultMap type="mcsw.offer.entity.Comment" id="CommentMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="offerId" column="offer_id" jdbcType="INTEGER"/>
-        <result property="masterId" column="master_id" jdbcType="INTEGER"/>
-        <result property="csId" column="cs_id" jdbcType="INTEGER"/>
+        <result property="mcswId" column="mcsw_id" jdbcType="VARCHAR"/>
         <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -16,26 +14,21 @@
 
     <!-- 批量插入 -->
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.comment(offer_id, master_id, cs_id, parent_id, create_time, update_time, content, user_id)
+        insert into mcsw.comment(mcsw_id, parent_id, create_time, update_time, content, user_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.offerId}, #{entity.masterId}, #{entity.csId}, #{entity.parentId}, #{entity.createTime},
-            #{entity.updateTime}, #{entity.content}, #{entity.userId})
+        (#{entity.mcswId}, #{entity.parentId}, #{entity.createTime}, #{entity.updateTime}, #{entity.content}, #{entity.userId})
         </foreach>
     </insert>
     <!-- 批量插入或按主键更新 -->
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mcsw.comment(offer_id, master_id, cs_id, parent_id, create_time, update_time, content, user_id)
+        insert into mcsw.comment(mcsw_id, parent_id, create_time, update_time, content, user_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.offerId}, #{entity.masterId}, #{entity.csId}, #{entity.parentId}, #{entity.createTime},
-            #{entity.updateTime}, #{entity.content}, #{entity.userId})
+            (#{entity.mcswId}, #{entity.parentId}, #{entity.createTime}, #{entity.updateTime}, #{entity.content}, #{entity.userId})
         </foreach>
         on duplicate key update
-        offer_id = values(offer_id) , master_id = values(master_id) , cs_id = values(cs_id) , parent_id =
-        values(parent_id) , create_time = values(create_time) , update_time = values(update_time) , content =
-        values(content) , user_id = values(user_id)
-    </insert>
+         mcsw_id = values(mcsw_id) , parent_id = values(parent_id) , create_time = values(create_time) , update_time = values(update_time) , content = values(content) , user_id = values(user_id)     </insert>
 
 </mapper>
 

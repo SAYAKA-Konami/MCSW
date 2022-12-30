@@ -1,10 +1,13 @@
 package mcsw.offer.dao;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
 import mcsw.offer.entity.Comment;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * (Comment)表数据库访问层
@@ -12,7 +15,12 @@ import mcsw.offer.entity.Comment;
  * @author Nan
  * @since 2022-12-29 14:24:13
  */
+@Mapper
 public interface CommentDao extends BaseMapper<Comment> {
+
+    @ResultMap("CommentMap")
+    @Select("select * from mcsw.comment where mcsw_id = #{id}")
+    List<Comment> queryByMcswId(@Param("id") String id);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）

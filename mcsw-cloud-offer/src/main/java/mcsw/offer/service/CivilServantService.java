@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import mcsw.offer.dao.CivilServantDao;
 import mcsw.offer.entity.CivilServant;
 import mcsw.offer.model.vo.MixBrowserVo;
+import mcsw.offer.service.extend.startegy.flaunt.FlauntStrategy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,10 +17,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class CivilServantService extends ServiceImpl<CivilServantDao, CivilServant> implements IService<CivilServant>, Common<CivilServant> {
 
-    // TODO
     @Override
     public MixBrowserVo convertToMixBrowserVo(CivilServant civilServant) {
-        return null;
+        return MixBrowserVo.builder()
+                .id(civilServant.getId())
+                .title(civilServant.getPositionName())
+                .rightTitle(civilServant.getSalary())
+                .subtitle(civilServant.getCity())
+                .type(FlauntStrategy.Category.CIVIL_SERVANT.getTag())
+                .remarks(civilServant.getRemarks().substring(0, 10))
+                .build();
+    }
+
+    @Override
+    public int getCategory() {
+        return FlauntStrategy.Category.CIVIL_SERVANT.getTag();
     }
 }
 

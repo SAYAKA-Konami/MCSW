@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import mcsw.offer.entity.CivilServant;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author Nan
  * @since 2022-12-29 14:23:59
  */
+@Mapper
 public interface CivilServantDao extends BaseMapper<CivilServant> {
 
     /**
