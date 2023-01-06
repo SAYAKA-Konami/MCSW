@@ -102,6 +102,10 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
         }else{
             lock.lock();
             try {
+                /*
+                    这里类似单例模式中的Double check。多个用户线程可能都进入了try语句之后阻塞。
+                    第一个进入临界区的线程成功地将数据写回缓存之后，其他访问线程无需再访问数据库资源。直接在Redis中操作数据即可。
+                 */
                 if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
                     // 如果此时缓存已经存在。直接执行自增操作即可
                     redisTemplate.opsForValue().increment(key);

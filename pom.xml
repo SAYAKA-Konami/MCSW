@@ -42,6 +42,7 @@
         <hutool.version>5.8.8</hutool.version>
         <pagehelper.boot.version>1.4.5</pagehelper.boot.version>
         <mybatis.plus-version>3.5.2</mybatis.plus-version>
+        <jedis.version>4.3.1</jedis.version>
     </properties>
 
     <parent>
@@ -176,6 +177,13 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper.boot.version}</version>
+            </dependency>
+<!--            Redis 连接工具-->
+            <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
