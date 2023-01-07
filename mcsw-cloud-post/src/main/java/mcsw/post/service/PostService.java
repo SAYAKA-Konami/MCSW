@@ -10,12 +10,13 @@ import mcsw.post.dao.PostDao;
 import mcsw.post.entity.Post;
 import mcsw.post.model.bo.PostBo;
 import mcsw.post.model.dto.PostDto;
+import mscw.common.aop.EnableRequestHeader;
+import mscw.common.aop.Limit;
+import mscw.common.api.CommonResult;
+import mscw.common.api.ResultCode;
 import mscw.common.domain.dto.QueryPosts;
 import mscw.common.domain.dto.RequestPage;
 import mscw.common.domain.vo.PostVo;
-import mscw.common.aop.EnableRequestHeader;
-import mscw.common.api.CommonResult;
-import mscw.common.api.ResultCode;
 import mscw.common.domain.vo.UserVO;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -141,6 +141,7 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
      *  查询主页帖子
      * @apiNote 在ES引入前，暂且使用mysql来代替该功能
      */
+    @Limit(value = {"home", "1000", "1000", "60"})
     public CommonResult<List<PostVo>> getHomePage(QueryPosts queryPosts){
         List<PostBo> postBos = postDao.queryHomepage(queryPosts);
         List<PostVo> result = convertPostBoToVo(postBos);
