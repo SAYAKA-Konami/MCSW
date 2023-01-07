@@ -37,7 +37,7 @@ public interface Constants {
     /**
      *  点赞帖子的用户列表的ID
      */
-    String POST_LIKE_USER_LIST_KEY_PREFIX = "reply_like_list_";
+    String POST_LIKE_USER_LIST_KEY_PREFIX = "post_like_list_";
 
 
 }

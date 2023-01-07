@@ -124,7 +124,7 @@ public class PostService extends ServiceImpl<PostDao, Post> implements IService<
             }
         }
         // 将其添加到对应的点赞列表中
-        redisTemplate.opsForSet().add(REPLY_LIKE_KEY_PREFIX + postId, header.get("id"));
+        redisTemplate.opsForSet().add(POST_LIKE_USER_LIST_KEY_PREFIX + postId, header.get("id"));
         return CommonResult.success(LIKE_SUCCESS);
     }
 
